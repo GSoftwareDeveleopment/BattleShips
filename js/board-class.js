@@ -2,16 +2,19 @@ const shipDrawingMode = {
     edit: 0,
     mast: 1,
     clear: 2
-}
+};
 
-class Board {
+class Board extends Interface {
 
     constructor(player, width, height) {
+        let container = $(`<div id="board-${this.player.id}"/>`);
+        super(container);
+
         this.player = player;
         this.width = width;
         this.height = height;
-        this.screen = $(`<div id="board-${this.player.id}"/>`).addClass('board hidden');
-        this.boardCells = [];   // tablica przechowująca referencje do pól planszy
+        // this.screen = $(`<div id="board-${this.player.id}"/>`).addClass('board hidden');
+        this.boardCells = [];   // tablica przechowująca referencje do elementów pól planszy
         this.ships = [];        // tablica przechowująca statki na planszy
 
         // tworzenie elementów HTML planszy
@@ -26,32 +29,49 @@ class Board {
             this.screen.append(row);
         }
 
-        this.screen.appendTo('#game');
+        this._container.addClass('board hidden').appendTo('#game');
     }
 
     // usunięcie planszy
     removeBoard() {
-        this.screen.detach();
-        this.boardCells = [];
+        this.hideBoard();
+        this._container.detach();
+        delete this.boardCells;
     }
 
     // pokazanie planszy
     showBoard(big = false) {
         if (big)
-            this.screen.addClass('battle')
+            this._container.addClass('battle')
         else
-            this.screen.removeClass('battle');
-        this.screen.removeClass('hidden');
-        this.screen.find('div.cell').on('mouseover', (e) => { this.placePointer(e); });  // kursor nad komórką
-        this.screen.find('div.cell').on('mouseout', (e) => { this.removePointer(e); });  // kursor nad komórką
+            this._container.removeClass('battle');
+        this._container.removeClass('hidden');
+
+        // zdarzenia dla planszy
+        this._container.find('div.cell')
+            .on('mouseover', (e) => { // kursor nad komórką
+                this.placePointer(e);
+                if (this.onMouseOver) this.onMouseOver(e);
+            })
+            .on('mouseout', (e) => {   // kursor nad komórką
+                this.removePointer(e);
+                if (this.onMouseOut) this.onMouseOut(e);
+            })
+            .on('click', (e) => {  // lewy przycisk myszy
+                if (this.onLeftClick) this.onLeftClick(e);
+            })
+            .on('contextmenu', (e) => { // prawy przycisk myszy
+                if (this.onRightClick) this.onRightClick(e);
+            });
+
     }
 
     // ukrycie planszy
     hideBoard() {
-        this.screen.removeClass('battle')
-        this.screen.addClass('hidden');
-        this.screen.find('div.cell').off('mouseover');
-        this.screen.find('div.cell').off('mouseout');
+        this._container.removeClass('battle')
+        this._container.addClass('hidden');
+
+        this._container.find('div.cell').off('mouseover mouseout click contextmenu');
     }
 
     /* zdarzenie dla mapy (przesówanie kursorem w obszarze mapy) */
@@ -70,8 +90,13 @@ class Board {
         this.screen.find('div.cell.choiced').removeClass('choiced');
     }
 
+    //
+    //
+    //
+
     // czyszczenie planszy
     clear() {
+        // TO DO: spróbuj zmienić to na 'for (let cellid of this.boardCells)'
         for (let cellID in this.boardCells) {
             this.boardCells[cellID].removeClass('error edit aim mast mishit hit');
         }

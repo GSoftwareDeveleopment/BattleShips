@@ -21,7 +21,7 @@ class Game {
         this.screenSetupShips = new SetShipsScreen('game-set', this);
         this.screenSetupHelp = new SetHelpScreen('set-help', this);
         this.screenBattle = new BattleScreen('battle', this);
-        this.screenStats = new StatsScreen('stats', this);
+        // this.screenStats = new StatsScreen('stats', this);
     }
 
     getResByName(name) {
@@ -36,7 +36,7 @@ class Game {
 
     goStart() {
         this.players = [];
-        this.screenStats.hideScreen(); // konieczność, zamknięcie screenStats po Gameover
+        // this.screenStats.hideScreen(); // konieczność, zamknięcie screenStats po Gameover
         this.screenStart.showScreen();
     }
 
@@ -45,11 +45,13 @@ class Game {
         if (playmode) {
             this.playmode = playmode;
 
-            const addNewPlayer = (mode, id) => {
-                let newPlayer = new Player(_game, mode, id);
-                this.players.push(newPlayer);
-            }
-
+            /*
+            
+                        const addNewPlayer = (mode, id) => {
+                            let newPlayer = new Player(_game, mode, id);
+                            this.players.push(newPlayer);
+                        }
+            */
             // stworzenie graczy wg. typu rozgrywki (playmode)
             switch (playmode) {
                 case "cvc": // computer vs computer
@@ -61,8 +63,12 @@ class Game {
                     addNewPlayer(0, 'computer');
                     break;
                 case "hvh": // human vs human
-                    addNewPlayer(1, 'human-1');
-                    addNewPlayer(1, 'human-2');
+                    this.players.push(new Human(this, 'human-1'));
+                    this.players.push(new Human(this, 'human-2'));
+                    /*
+                                        addNewPlayer(1, 'human-1');
+                                        addNewPlayer(1, 'human-2');
+                    */
                     break;
             }
 
@@ -90,15 +96,15 @@ class Game {
 
     goGameover() {
         this.screenBattle.hideScreen();
-        this.screenStats.showScreen();
+        // this.screenStats.showScreen();
     }
 
     goRevange() {
-        this.screenStats.hideScreen();
+        // this.screenStats.hideScreen();
 
         // zresetuj graczy
         for (let playerID in this.players) {
-            this.players[playerID].resetPlayer();
+            this.players[playerID].reset();
         }
 
         this.goSetupShips();

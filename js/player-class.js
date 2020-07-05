@@ -8,7 +8,7 @@ class Player {
         this.resetPlayer();
     }
 
-    resetPlayer() {
+    reset() {
         this.score = 0;
         this.moves = 0;
 

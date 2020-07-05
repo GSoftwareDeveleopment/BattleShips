@@ -1,3 +1,9 @@
+const shipDrawingMode = {
+    edit: 0,
+    mast: 1,
+    clear: 2
+}
+
 class Board {
 
     constructor(player, width, height) {
@@ -71,10 +77,75 @@ class Board {
         }
     }
 
+    // metoda sprawdzająca czy statek (ship) mieści się na planysz
+    inBoard(ship) {
+        let mastsCount = ship.masts.length;
+
+        const _inBound = function (x, y) {
+            return ((x >= 0 && x < this.width &&
+                y >= 0 && y < this.height));
+        }
+
+        let x1 = ship.x,
+            y1 = ship.y,
+            x2 = ship._pos(mastsCount - 1).x,
+            y2 = ship._pos(mastsCount - 1).y;
+
+        return (_inBound(x1, y1) && _inPool(x2, y2));
+    }
+
+    _index(x, y) {
+        return x + y * this.board.width;
+    }
+
+    // metoda sprawdza, czy statek (ship) nie koliduje z innymi statami na planszy
+    isOverlaped(ship) {
+        let nx, ny, id, isOverlap = false;
+
+        for (let i = 0; i < ship.masts.length; i++) {
+            ({ x: nx, y: ny } = ship._pos(i));
+
+            for (let shipID in this.ships) {
+                if (this.ships[shipID].isHit(nx, ny) !== false) {
+                    id = this._index(nx, ny);
+                    this.boardCells[id].addClass('error');
+                    isOverlap = true;
+                }
+            }
+        }
+        return isOverlap;
+    }
+
+    drawShip(ship, mode = shipDrawingMode.edit) {
+        let nx, ny, id, cell;
+
+        for (let i = 0; i < ship.masts.length; i++) {
+            ({ x: nx, y: ny } = ship._pos(i));
+
+            id = this._index(nx, ny);
+            cell = this.boardCells[id];
+
+            if (mode !== shipDrawingMode.clear) {
+                if (mode)
+                    cell.addClass('mast')
+                else
+                    cell.addClass('edit');
+
+                if (!ship.masts[i]) {
+                    cell.addClass('mast hit');
+                }
+            } else {
+                cell.removeClass('mast hit');
+            }
+        }
+    }
+
     // rysowanie wszystkich statków na planszy
     drawAllShips() {
+        // TO DO: spróbuj zamienić to na pętlę for (ship of this.ships)
         for (let shipID in this.ships) {
-            this.ships[shipID].draw(1);
+            this.drawShip(this.ships[shipID], shipDrawingMode.masts)
+            // this.ships[shipID].draw(1);
         }
     }
 

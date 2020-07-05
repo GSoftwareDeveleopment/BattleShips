@@ -1,0 +1,223 @@
+:root {
+    --maxShipSize:4;
+    --interfaceRadius:10px;
+}
+
+#game-set {
+    background-image: url('../assets/setup.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position:center;
+}
+
+#game-set .title {
+     display:inline-block;
+    position:relative;
+    top:2%;
+    left:2%;
+    font-family: "Righteous";
+    font-size:4em;
+    color:#ffffff;
+    text-shadow: 0 0 15px #000000;
+}
+.title span {
+    display:block;
+    text-align:left;
+    font-size:.5em;
+}
+
+#game-set button {
+    position:absolute;
+    bottom:2%;
+    height:2em;
+    padding:0 10px;
+    
+    background-color:rgba(0,0,0,.5);
+    border:none;
+    border-radius: var(--interfaceRadius);
+
+    font-family: "Righteous";
+    color:#fff;
+    font-size:1.5em;
+    
+    cursor:pointer;
+    transition: .5s;
+}
+
+#game-set button:hover {
+    background-color:rgba(255,255,255,.25);
+}
+
+#game-set button.disabled {
+    background:none;
+    color:gray;
+    cursor:not-allowed;
+}
+
+#game-set button#abort {
+    left:2%;
+}
+
+#game-set button#done {
+    right:2%;
+}
+
+#game-set button#battle {
+    right:2%;
+}
+
+#game-set button.green {
+    background-color:limegreen;
+    color:black;
+}
+
+#game-set button.green:hover {
+    background-color:orange;
+    color:black;
+}
+
+#game-set button#help {
+    top:2%;
+    bottom:none;
+    right:2%;
+}
+
+#game-set input {
+    position:absolute;
+    left:50%;
+    bottom:2%;
+    width:50%;
+    height:2em;
+    transform: translate(-50%,0);
+    background-color:rgba(0,0,0,.5);
+    border:none;
+    border-bottom:#ffffff solid 1px;
+    border-radius: var(--interfaceRadius);
+    font-family: "Righteous";
+    color:#fff;
+    font-size:1.5em;
+    text-align:center;
+    cursor:pointer;
+    transition: .5s;
+}
+#game-set input:hover {
+    background-color:rgba(255,255,255,.25);
+}
+#game-set input:focus {
+    border-bottom:orange solid 4px;
+}
+
+#game-set fieldset {
+    margin:0;
+    padding:0;
+    position:absolute;
+    top:15%;
+    right:2%;
+    width:23%;
+    height:70%;
+    /* background:rgba(255,255,255,.25); */
+    background:none;
+    border:none;
+    font-family: "Righteous";
+    color:#fff;
+}
+#game-set fieldset legend {
+    text-align:center;
+    font-size:1.5em;
+}
+
+#game-set fieldset ul {
+    margin:0;
+    padding:0;
+    list-style-type: none;
+}
+
+#game-set fieldset ul li {
+    position:relative;
+    cursor:pointer;
+    margin:5% 0;
+    overflow:hidden;
+
+    background-color:rgba(0,0,0,.5);
+    border:rgba(0,0,0,0) solid 2px;
+    border-radius: var(--interfaceRadius);
+    box-shadow: 0 0 15px #000000;
+
+    text-align:center;
+
+    transition: .5s;
+}
+#game-set fieldset ul li.selected {
+    border:orangered solid 2px;
+    background-color:rgba(0,128,0,.5);
+}
+#game-set fieldset ul li.zeroQ {
+    opacity:0.5;
+}
+
+#game-set fieldset ul li:hover {
+    background-color:rgba(0,0,0,.75);
+}
+
+#game-set fieldset ul li > div.q {
+    display:block;
+    position:absolute;
+    top:-.5em;
+    left:-.5em;
+    width:3em;
+    height:3em;
+    
+    background-color:rgba(0,255,0,.5);
+    box-shadow: 5px 5px 15px black;
+    border-radius: 50%;
+}
+#game-set fieldset ul li > div.q span {
+    position:relative;
+    top:.4em;
+    left:.1em;
+    font-size:1.5em;
+}
+
+#game-set fieldset ul li > span.name {
+    display:inline-block;
+    position: relative;
+    height:3em;
+
+    margin-left:2.7em;
+    margin-right:.2em;
+
+    font-size:1em;
+}
+
+#game-set fieldset ul li > img.ship {
+    position:relative;
+    left:0%;
+    width:80%;
+}
+
+#game-set fieldset ul li > div.size {
+    display:block;
+    position:relative;
+    left:5%;
+    width:90%;
+    height:.5em;
+
+    border:#000000 solid 1px;
+
+    text-align:left;
+}
+#game-set fieldset ul li > div.size > span {
+    display:block;
+    position:relative;
+    height:100%;
+    width:calc(100% / var(--maxShipSize));
+
+    border-right:#000000 solid 1px;
+    background:none;
+
+    float:left;
+}
+
+#game-set fieldset ul li > div.size > span.set {
+    background:orange;
+}

@@ -1,0 +1,143 @@
+#start {
+    background-image: url('../assets/start.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position:center;
+}
+
+#start .title {
+    display:inline-block;
+    position:relative;
+    top:10%;
+    left:50%;
+    transform: translate(-50%, 0);
+    font-family: "Righteous";
+    font-size:10em;
+    font-weight: 900;
+    line-height: 0.6em;
+    color:white;
+    text-shadow: 0 0 15px #000000;
+    text-align:center;
+    transition:  .5s;
+}
+
+#start .title > span {
+    display:inline-block;
+    position: absolute;;
+    top:1.7em;
+    right:-.5em;
+    transform: rotate(-30deg);
+    font-family: "Righteous";
+    font-size:0.5em;
+    font-weight: 100;
+    color:indianred;
+    text-shadow: 0 0 15px #000000;
+}
+
+#start button {
+    position:absolute;
+    height:2em;
+    padding:0 10px;
+    
+    background-color:rgba(0,0,0,.5);
+    border:none;
+    border-radius: var(--interfaceRadius);
+
+    font-family: "Righteous";
+    color:#fff;
+    font-size:1.5em;
+    
+    cursor:pointer;
+    transition: .5s;
+}
+#start button:hover {
+    background-color:rgba(255,255,255,.25);
+}
+
+#start button#playMusic {
+    bottom:2%;
+    left:2%;
+}
+#start button#stopMusic {
+    bottom:2%;
+    left:2%;
+}
+
+/* general menu style */
+.menu {
+    display:inline-block;
+    position:absolute;
+    bottom: 18%;
+    left:5%;
+    width:90%;
+    height:30%;
+    
+    background-color:rgba(0,0,0,.50);
+    box-shadow: 0 0 15px #000000;
+    border-radius:10px;
+
+    font-family: "Righteous";
+    line-height: 1.5em;
+}
+
+.menu > ul {
+    /* display:block; */
+    margin:0;
+    padding:0;
+    list-style-type: none;
+    text-align:center;
+}
+
+.menu > ul > li {
+    color: white;
+}
+
+.menu > ul > li.selectable {
+    color: chocolate;
+    cursor:pointer;
+}
+
+.menu > ul > li.selectable:hover {
+    color: orange
+}
+
+/* main menu style */
+
+#main-menu {
+    bottom: 25%;
+    left:5%;
+    width:90%;
+    height:20%;
+
+    font-size:3em;
+}
+
+/* play menu style */
+
+#play-menu {
+    bottom: 12%;
+    left:5%;
+    width:90%;
+    height:37%;
+
+    font-size:3em;
+}
+
+#settings-menu {
+    bottom: 12%;
+    left:5%;
+    width:90%;
+    height:37%;
+
+    font-size:2em;
+}
+
+#settings-menu > ul > li.selectable {
+    margin-left:5%;
+    margin-right:5%;
+    text-align:left;
+}
+
+#settings-menu > ul > li.selectable > span.set-value {
+    float:right;
+}

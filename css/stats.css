@@ -1,0 +1,247 @@
+div#stats {
+    background-image: url('../assets/battle.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position:center;
+    z-index:10;
+}
+
+div#stats div.title {
+    display:block;
+    position:relative;
+    top:2%;
+    left:2%;
+    font-family: "Righteous";
+    font-size:4em;
+    color:#ffffff;
+    text-shadow: 0 0 15px black;
+}
+
+div#stats-dlg {
+    display:block;
+    position: absolute;
+    top:9%;
+    left:0;
+    width:100%;
+    height:89%;
+    
+    /* background-color:rgba(0,0,0,.8); */
+    /* border-radius: 15px; */
+    /* box-shadow: 0 0 15px black; */
+
+    font-family: "Righteous";
+}
+
+/* */
+
+div#stats-dlg p {
+    padding:0;
+    margin:0;
+    margin-left:2%;
+    margin-right:2%;
+    margin-top:2%;
+    /* width:100%; */
+
+    /* border-bottom:white dotted 1px; */
+    text-shadow:0 0 10px black;
+
+    font-size:2em;
+    color:white;
+}
+
+div#stats-dlg p span.stat {
+    float:right;
+}
+
+div#stats-dlg h1 {
+    padding:0;
+    margin:0;
+    margin-top:2%;
+
+    border-bottom:orange 1px solid;
+
+    text-shadow:0 0 10px black;
+    text-align:center;
+    color:orange;
+    font-size:2em;
+    font-weight:normal;
+}
+
+/* Top tabs block style */
+
+div#stats-dlg > ul {
+    position: relative;
+    display:block;
+    padding:0;
+    margin:0;
+    margin-top:2%;
+
+    list-style: none;
+}
+
+div#stats-dlg > ul > li {
+    display:inline-block;
+
+    padding:0em 1em;
+    font-size:2em;
+    color:orange;
+    text-align:center;
+
+    border-top-left-radius:var(--interfaceRadius);
+    border-top-right-radius:var(--interfaceRadius);
+
+    transition: .5s;
+}
+div#stats-dlg > ul > li:hover {
+    background-color:rgba(255,255,255,.25);
+}
+div#stats-dlg > ul > li.selected {
+    background-color:orange;
+    color:black;
+}
+
+
+/* bottom close button */
+
+div#stats-dlg button {
+    position:absolute;
+    height:2em;
+    padding:0 10px;
+    
+    background-color:rgba(0,0,0,.5);
+    border:none;
+    border-radius: var(--interfaceRadius);
+
+    font-family: "Righteous";
+    color:#fff;
+    font-size:1.5em;
+    
+    cursor:pointer;
+    transition: .5s;
+}
+div#stats-dlg button:hover {
+    background-color:rgba(255,255,255,.25);
+}
+
+div#stats-dlg button#close {
+    bottom:2%;
+    right:2%;
+}
+
+div#stats-dlg button#menu {
+    bottom:2%;
+    left:2%;
+}
+
+div#stats-dlg button#revange {
+    bottom:2%;
+    right:2%;
+}
+
+/* tab content container style */
+
+div#stats-dlg > div#global {
+    position:relative;
+    width:65%;
+
+    background-color:rgba(0,0,0,.5);
+    border-radius: var(--interfaceRadius);
+}
+
+div.tab {
+    position:relative;
+    width:100%;
+    /* height:75%; */
+    border-top:orange solid 2px;
+}
+
+/* inner tab content styles */
+
+div.tab > div#player-stat {
+    position: relative;
+    left:0;
+    width:65%;
+
+    background-color:rgba(0,0,0,.5);
+    border-radius: var(--interfaceRadius);
+}
+
+div.tab > ul {
+    position:absolute;
+    right:0;
+    margin:0;
+    padding:0;
+    width:30%;
+
+    background-color:rgba(0,0,0,.5);
+    border-radius: var(--interfaceRadius);
+
+    list-style: none;
+}
+
+div.tab > ul > li {
+    display:block;
+    margin:0;
+    padding:2%;
+    width:100%;
+}    
+div.tab > ul > li.title {
+    font-size:1.5em;
+    color:White;
+
+    border-bottom:white 1px solid;
+    text-align:center;
+}
+
+div.tab > ul > li > div.name {
+    font-size:1em;
+    color:White;
+
+    height:3em;
+    text-align:center;
+}
+
+div.tab > ul > li > div.ships {
+    position:relative;
+    width:100%;
+}
+
+div.tab > ul > li > div.ships > div.ship {
+    display:inline-block;
+    position: relative;
+}
+
+div.tab > ul > li > div.ships > div.ship > img {
+    position:relative;
+    width:100%;
+}
+
+div.tab > ul > li > div.ships > div.ship > img.noactive {
+    filter: grayscale(1) blur(4px);
+    opacity: .75;
+}
+
+div.tab > ul > li > div.ships > div.ship > img.sunk {
+    /* filter: grayscale(1); */
+    opacity: .25;
+}
+
+div.tab > ul > li > div.ships > div.ship > div.damage {
+    display:block;
+    position:relative;
+    left:5%;
+    width:90%;
+    height:.5em;
+
+    border:#000000 solid 1px;
+    background-color:green;
+    text-align:left;
+}
+div.tab > ul > li > div.ships > div.ship > div.damage > span {
+    display:block;
+    position:relative;
+    height:100%;
+    width:0;
+
+    background:darkred;
+}

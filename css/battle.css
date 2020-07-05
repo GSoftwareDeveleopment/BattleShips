@@ -1,0 +1,57 @@
+#battle.screen {
+    background-image: url('../assets/battle.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position:center;
+}
+
+#battle.screen div.title {
+    display:inline-block;
+    position:relative;
+    top:2%;
+    left:2%;
+    font-family: "Righteous";
+    font-size:4em;
+    color:#ffffff;
+    text-shadow: 0 0 15px black;
+}
+
+#battle.screen div.score {
+    position:absolute;
+    top:2%;
+    left:75%;
+    font-family: "Righteous";
+    font-size:1.5em;
+    color:orange;
+    text-shadow: 0 0 15px black;
+}
+
+#battle.screen button {
+    position:absolute;
+    height:2em;
+    padding:0 10px;
+    
+    background-color:rgba(0,0,0,.5);
+    border:none;
+    border-radius: var(--interfaceRadius);
+
+    font-family: "Righteous";
+    color:#fff;
+    font-size:1.5em;
+    
+    cursor:pointer;
+    transition: .5s;
+}
+#battle.screen button:hover {
+    background-color:rgba(255,255,255,.25);
+}
+
+#battle.screen button#surrender {
+    bottom:2%;
+    left:2%;
+}
+
+#battle.screen button#stats {
+    bottom:2%;
+    right:2%;
+}

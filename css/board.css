@@ -1,0 +1,83 @@
+:root {
+    --boardSize:10;
+}
+
+.board {
+    display:block;
+    position:absolute;
+    top:20%;
+    left:2%;
+    width:70%;
+    height:70%;
+    background-color:rgba(0,128,255,.25);
+    box-shadow: 0 0 15px #000000;
+}
+
+.board.battle {
+    left:10%;
+    top:11%;
+    width:80%;
+    height:80%;
+}
+
+.board div.row {
+    display:block;
+    position: relative;
+    width:100%;
+    height:calc(100% / var(--boardSize));
+}
+.board div.row div.cell {
+    display:inline-block;
+    position:relative;
+    padding:0;
+    margin:0;
+    width:calc(100% / var(--boardSize));
+    height:100%;
+    border:rgba(0,0,100,.25) solid 1px;
+    transition: .35s;
+}
+
+div.cell.choiced {
+    border:orangered solid 1px !important;
+}
+
+div.cell.mast {
+    background-color:gray;
+}
+
+div.cell.mishit {
+    background-color:rgb(0, 147, 196);
+}
+
+div.cell.hit {
+    background-color:rebeccapurple;
+}
+
+@keyframes aim-bounce {
+    from {
+        background-position: center center;
+        background-size:75%;
+    }
+    to {
+        background-position: center center;
+        background-size:100%;
+    }
+}
+div.cell.aim {
+    background-image: url(../assets/aim.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    animation-duration: 0.08s;
+    animation-name: aim-bounce;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+div.cell.edit {
+    background-color:olive;
+}
+
+div.cell.error {
+    background-color:red;
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitwa morska</title>
+    <!-- external librarys & assets -->
+    <script src="libs/jquery-3.4.0.min.js"></script>
+    <link rel="shortcut icon" href="battleship.png" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+
+    <!-- game -->
+    <link rel="stylesheet" href="css/battleships.css">
+    <link rel="stylesheet" href="css/start.css">
+    <link rel="stylesheet" href="css/setShips.css">
+    <link rel="stylesheet" href="css/set-help.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/battle.css">
+    <link rel="stylesheet" href="css/stats.css">
+
+    <!-- <script src="js/dockyard-interface.js"></script> -->
+    <!-- screen classes -->
+    <script src="js/start-screen-class.js"></script>
+    <script src="js/setShips-class.js"></script>
+    <script src="js/setHelp-class.js"></script>
+    <script src="js/battle-class.js"></script>
+    <script src="js/stats-class.js"></script>
+
+    <!-- other classes -->
+    <script src="js/assets-class.js"></script>
+    <script src="js/game-class.js"></script>
+    <script src="js/player-class.js"></script>
+    <script src="js/board-class.js"></script>
+    <script src="js/ship-class.js"></script>
+    <script src="js/dockyard-pl.js"></script>
+</head>
+
+<body>
+    <div id="loader">
+        BITWA MORSKA
+        <div class="loader">wczytywanie...</div>
+    </div>
+    <div id="game" class="hidden">
+        <div id="start" class="screen hidden">
+            <div class="title">BITWA<br>MORSKA<span>classic-pl</span></div>
+            <div id="main-menu" class="menu">
+                <ul>
+                    <li data-option="menu" data-menu="play-menu" class="selectable">Bitwa</li>
+                    <li data-option="menu" data-menu="settings-menu" class="selectable">Ustawienia</li>
+                </ul>
+            </div>
+            <div id="play-menu" class="menu hidden">
+                <ul>
+                    <li>Wybierz tryb</li>
+                    <li data-option="battle" data-mode="hvh" class="selectable">Człowiek vs Człowiek</li>
+                    <li data-option="battle" data-mode="hvc" class="selectable">Człowiek vs Maszyna</li>
+                    <li data-option="menu" data-menu="main-menu" class="selectable">Wróć</li>
+                </ul>
+            </div>
+            <div id="settings-menu" class="menu hidden">
+                <ul>
+                    <li>Ustawienia</li>
+                    <li data-option="option" data-set="boardSize" data-type="num" data-values="8,10,12,14,16,18,20"
+                        class="selectable">
+                        Rozmiar planszy<span class="set-value">10</span></li>
+                    <li data-option="option" data-set="showSunkenShips" data-type="bool" data-values="off,on"
+                        class="selectable">
+                        Wyróżnij zatopione statki<span class="set-value">on</span>
+                    </li>
+                    <li data-option="option" data-set="allowObliqueArrangement" data-type="bool" data-values="off,on"
+                        class="selectable">
+                        Pozwól na ukośne położenie statków<span class="set-value">off</span>
+                    </li>
+                    <li data-option="option" data-set="distanceBetweenShips" data-type="bool" data-values="off,on"
+                        class="selectable">
+                        Pilnuj ostępów między statkami<span class="set-value">off</span>
+                    </li>
+                    <li data-option="menu" data-menu="main-menu" class="selectable">Wróć</li>
+                </ul>
+            </div>
+            <button id="playMusic">MUZYKA: WYŁ</button>
+            <button id="stopMusic" class="hidden">MUZYKA: WŁ</button>
+        </div>
+        <div id="game-set" class="screen hidden">
+            <div class="title">BITWA MORSKA<span>Ustaw swoje statki</span></div>
+            <fieldset>
+                <legend>Twoje statki</legend>
+                <ul id="dockyard-list">
+                </ul>
+            </fieldset>
+            <button id="abort">Zrezygnuj</button>
+            <input id="player-name" type="text" />
+            <button id="done">Dalej</button>
+            <button id="battle">Bitwa</button>
+            <button id="help">Pomoc</button>
+        </div>
+        <div id="set-help" class="hidden">
+            <div id="help-dlg">
+                <h1>Zanim wpadniesz w panikę</h1>
+                <p>1. Wybierz statek z listy</p>
+                <p>2. Użyj PPM aby obrócić statek</p>
+                <p>3. Ustaw statek na planszy używając LPM</p>
+                <p>To tyle :)</p>
+                <button id="close">Zamknij</button>
+            </div>
+        </div>
+        <div id="battle" class="screen hidden">
+            <div class="title">BITWA MORSKA</div>
+            <div class="score"></div>
+            <button id="surrender">Poddaję się</button>
+            <button id="stats">Statystka</button>
+            <div id="turn" class="bigtext">Twój ruch<br><span></span></div>
+            <div id="fire" class="bigtext">OGNIA</div>
+            <div id="miss" class="bigtext">PUDŁO<br><span class="points"></span></div>
+            <div id="hit" class="bigtext">TRAFIONY<br><span class="points"></span></div>
+            <div id="hit-sink" class="bigtext">TRAFIONY<br>ZATOPIONY<br><span class="points"></span></div>
+            <div id="gameover" class="bigtext">KONIEC<br>GRY</div>
+            <!-- <span class="bigtext"></span> -->
+        </div>
+        <div id="stats" class="hidden">
+            <div id="stats-dlg">
+                <ul>
+                    <li>YOU</li>
+                    <li>OPPONENT</li>
+                    <li>GLOBAL</LI>
+                </ul>
+                <!-- <h1>Global battle stats</h1> -->
+                <p>Battle time<span id="stat-duration" class="stat">-</span></p>
+                <p>Turns<span id="stat-turns" class="stat">-</span></p>
+                <p>Total shots<span id="stat-shots" class="stat">-</span></p>
+                <button id="close">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

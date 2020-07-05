@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Ships</title>
+    <!-- external librarys & assets -->
+    <script src="libs/jquery-3.4.0.min.js"></script>
+    <link rel="shortcut icon" href="battleship.png" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+
+    <!-- game -->
+    <link rel="stylesheet" href="css/battleships.css">
+    <link rel="stylesheet" href="css/start.css">
+    <link rel="stylesheet" href="css/setShips.css">
+    <link rel="stylesheet" href="css/set-help.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/battle.css">
+    <link rel="stylesheet" href="css/stats.css">
+
+    <!-- <script src="js/dockyard-interface.js"></script> -->
+    <!-- screen classes -->
+    <script src="js/screen-class.js"></script>
+    <script src="js/interface-class.js"></script>
+    <script src="js/start-class.js"></script>
+    <script src="js/setShips-class.js"></script>
+    <script src="js/setHelp-class.js"></script>
+    <script src="js/battle-class.js"></script>
+    <script src="js/stats-class.js"></script>
+
+    <!-- other classes -->
+    <script src="js/assets-class.js"></script>
+    <script src="js/game-class.js"></script>
+    <script src="js/player-class.js"></script>
+    <script src="js/board-class.js"></script>
+    <script src="js/ship-class.js"></script>
+    <script src="js/dockyard-en.js"></script>
+</head>
+
+<body>
+    <div id="loader">
+        BATTLE SHIPS
+        <div class="loader">loading...</div>
+    </div>
+    <div id="game" class="hidden">
+        <div id="start" class="screen hidden">
+            <div class="title">BATTLE<br>SHIPS<span>classic</span></div>
+            <div id="main-menu" class="menu">
+                <ul>
+                    <li data-option="menu" data-menu="play-menu" class="selectable">Battle</li>
+                    <li data-option="menu" data-menu="settings-menu" class="selectable">Settings</li>
+                </ul>
+            </div>
+            <div id="play-menu" class="menu hidden">
+                <ul>
+                    <li>choice mode</li>
+                    <li data-option="battle" data-mode="hvh" class="selectable">Human vs Human</li>
+                    <li data-option="battle" data-mode="hvc" class="selectable">Human vs Computer</li>
+                    <li data-option="menu" data-menu="main-menu" class="selectable">Back</li>
+                </ul>
+            </div>
+            <div id="settings-menu" class="menu hidden">
+                <ul>
+                    <li>Settings</li>
+                    <li data-option="option" data-set="boardSize" data-type="num" data-values="8,10,12,14,16,18,20"
+                        class="selectable">
+                        Board size<span class="set-value">10</span></li>
+                    <li data-option="option" data-set="showSunkenShips" data-type="bool" data-values="off,on"
+                        class="selectable">
+                        Show sunken ships<span class="set-value">on</span>
+                    </li>
+                    <li data-option="option" data-set="allowObliqueArrangement" data-type="bool" data-values="off,on"
+                        class="selectable">
+                        Allow oblique arrangement of ships<span class="set-value">off</span>
+                    </li>
+                    <li data-option="option" data-set="distanceBetweenShips" data-type="bool" data-values="off,on"
+                        class="selectable">
+                        Observe the distance between ships<span class="set-value">off</span>
+                    </li>
+                    <li data-option="menu" data-menu="main-menu" class="selectable">Back</li>
+                </ul>
+            </div>
+            <button id="playMusic">MUSIC: OFF</button>
+            <button id="stopMusic" class="hidden">MUSIC: ON</button>
+        </div>
+        <div id="game-set" class="screen hidden">
+            <div class="title">BATTLESHIPS<span>Setup your ships</span></div>
+            <fieldset>
+                <legend>Dockyard</legend>
+                <ul id="dockyard-list">
+                </ul>
+            </fieldset>
+            <button id="abort">ABORT</button>
+            <input id="player-name" type="text" />
+            <button id="done">DONE</button>
+            <button id="battle">BATTLE</button>
+            <button id="help">HELP</button>
+        </div>
+        <div id="set-help" class="hidden">
+            <div id="help-dlg">
+                <h1>Before you panic...</h1>
+                <p>1. Select a ship from the "Dockyard" list</p>
+                <p>2. Rotate the ship, using RBM.</p>
+                <p>3. Set the selected ship on board (LBM)</p>
+                <p>That's all :)</p>
+                <button id="close">CLOSE</button>
+            </div>
+        </div>
+        <div id="battle" class="screen hidden">
+            <!-- <div class="title">BATTLESHIPS</div> -->
+            <div class="score"></div>
+            <button id="surrender">SURRENDER</button>
+            <button id="stats">STATS</button>
+            <div id="turn" class="bigtext"><span></span><br>TURN</div>
+            <div id="fire" class="bigtext">FIRE</div>
+            <div id="miss" class="bigtext">MISS<br><span class="points"></span></div>
+            <div id="hit" class="bigtext">HIT<br><span class="points"></span></div>
+            <div id="hit-sink" class="bigtext">HIT & SINK<br><span class="points"></span></div>
+            <div id="gameover" class="bigtext">GAME<br>OVER</div>
+            <!-- <span class="bigtext"></span> -->
+        </div>
+        <div id="stats" class="screen hidden">
+            <div class="title">STATISTICS</div>
+            <div id="stats-dlg">
+                <ul>
+                    <li data-tabid="you">YOU</li>
+                    <li data-tabid="opponent">OPPONENT</li>
+                    <!-- <li data-tabid="global">GLOBAL</LI> -->
+                </ul>
+                <!-- <h1>Global battle stats</h1> -->
+                <div id="you" class="tab">
+                    <ul id="ships">
+                        <li>
+                            <h1>Fleet status</h1>
+                        </li>
+                        <li>
+                            <p>Condition<span id="you-fleetCondition" class="stat">-</span></p>
+                        </li>
+                        <!-- <li class="title">Fleet status</li> -->
+                    </ul>
+                    <div id="player-stat">
+                        <h1>Battle status</h1>
+                        <p>Discovered ships<span id="you-discoveredShips" class="stat">-</span></p>
+                        <p>Sunken ships<span id="you-sunkenShips" class="stat">-</span></p>
+                        <p>Shots fired<span id="you-shots" class="stat">-</span></p>
+                        <p>Hits<span id="you-hits" class="stat">-</span></p>
+                        <p>Accuracy<span id="you-accuracy" class="stat">-</span></p>
+                    </div>
+                </div>
+                <div id="opponent" class="tab">
+                    <ul id="ships">
+                        <li>
+                            <h1>Fleet status</h1>
+                        </li>
+                        <li>
+                            <p>Condition<span id="opponent-fleetCondition" class="stat">-</span></p>
+                        </li>
+                        <!-- <li class="title">Fleet status</li> -->
+                    </ul>
+                    <div id="player-stat">
+                        <h1>Battle status</h1>
+                        <p>Discovered ships<span id="opponent-discoveredShips" class="stat">-</span></p>
+                        <p>Sunken ships<span id="opponent-sunkenShips" class="stat">-</span></p>
+                        <p>Shots fired<span id="opponent-shots" class="stat">-</span></p>
+                        <p>Hits<span id="opponent-hits" class="stat">-</span></p>
+                        <p>Accuracy<span id="opponent-accuracy" class="stat">-</span></p>
+                    </div>
+                </div>
+                <div id="global">
+                    <h1>GLOBAL</h1>
+                    <p>Battle time<span id="stat-duration" class="stat">-</span></p>
+                    <p>Turns<span id="stat-turns" class="stat">-</span></p>
+                    <p>Total shots<span id="stat-shots" class="stat">-</span></p>
+                </div>
+                <button id="close">CLOSE</button>
+                <button id="revange">REVANGE</button>
+                <button id="menu">MENU</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,8 +1,7 @@
 class Dockyard extends Interface {
 
     constructor(dockyardData, container) {
-        this._container = $(container);
-        this._elements = new Array();
+        super(container);
 
         this.dockyard = dockyardData;
         for (let i = 0; i < this.dockyard.length; i++) {
@@ -26,7 +25,7 @@ class Dockyard extends Interface {
             }
 
             if (!shipdata.imgField) {   // Image field
-                let img = this.game.assets.images[`shiptype-${shipdata.shipType}`].obj;
+                let img = game.assets.images[`shiptype-${shipdata.shipType}`].obj;
                 shipdata.imgField = $(img).addClass('ship');
                 shipdata.mainField.append(img)
             }
@@ -40,6 +39,10 @@ class Dockyard extends Interface {
                 shipdata.mainField.append(shipdata.size);
             }
         }
+
+        // obsługa zdarzeń list statków (dockyard-list) (lewy przycisk myszy)
+        this.interface.build('fieldset ul li', 'dockyard-items')
+            .on('click', (e) => { this.selectShip(e); });
 
         this.selectedShip = null;
         this.selectedShipType = null;

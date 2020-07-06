@@ -2,7 +2,8 @@ class BattleScreen extends Screen {
     constructor(_container, _game) {
         super(_container, _game);
 
-        this.scoretext = this.screen.find('div.score');
+        this.buildInterface('div.score', 'score');
+        // this.scoretext = this.container.find('div.score');
 
         this.buildInterface('button', 'btn');
         // this.buildInterface('button', 'btn', {
@@ -37,7 +38,8 @@ class BattleScreen extends Screen {
             this.game.assets.sounds['sea'].play(true);
         }
 
-        this.scoretext.removeClass('hidden').html('');
+        this.interface['score'][''].removeClass('hidden').html('');
+        // this.scoretext.removeClass('hidden').html('');
 
         this.interface.build('button', 'btn', {
             'surrender': (el) => { el.on('click', () => { this.surrender(); }); },
@@ -112,7 +114,9 @@ class BattleScreen extends Screen {
             if (this.currentPlayer.score < 0)
                 this.currentPlayer.score = 0;
         }
-        this.scoretext.html(this.currentPlayer.name + '<br>SCORE:' + this.currentPlayer.score);
+        let scoreText = this.currentPlayer.name + '<br>SCORE:' + this.currentPlayer.score;
+        this.interface['score'][''].html(scoreText);
+        // this.scoretext.html(scoreText);
     }
 
     fire(e) {

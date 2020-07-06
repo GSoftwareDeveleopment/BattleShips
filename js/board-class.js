@@ -7,15 +7,20 @@ const shipDrawingMode = {
 class Board extends Interface {
 
     constructor(player, width, height) {
-        let container = $(`<div id="board-${this.player.id}"/>`);
-        super(container);
+        let c = $("<div />"); // utworzenie nowego elementu DOM
+        super(c);
 
         this.player = player;
+        this._containerID = this.player.id;
+        c.prop("id", this.player.id)
+            .addClass('board hidden');
+
         this.width = width;
         this.height = height;
         // this.screen = $(`<div id="board-${this.player.id}"/>`).addClass('board hidden');
         this.boardCells = [];   // tablica przechowująca referencje do elementów pól planszy
         this.ships = [];        // tablica przechowująca statki na planszy
+
 
         // tworzenie elementów HTML planszy
         for (let y = 0; y < this.height; y++) {
@@ -26,10 +31,15 @@ class Board extends Interface {
                 this.boardCells.push(cell);
                 row.append(cell);
             }
-            this.screen.append(row);
+            this._container.append(row);
         }
 
-        this._container.addClass('board hidden').appendTo('#game');
+        this.onCellOver = null;
+        this.onCellOut = null;
+        this.onClickLeft = null;
+        this.onClickRight = null;
+
+        this._container.appendTo('#game');
     }
 
     // usunięcie planszy
@@ -48,20 +58,20 @@ class Board extends Interface {
         this._container.removeClass('hidden');
 
         // zdarzenia dla planszy
-        this._container.find('div.cell')
+        this.build('div.cell', 'cells')
             .on('mouseover', (e) => { // kursor nad komórką
                 this.placePointer(e);
-                if (this.onMouseOver) this.onMouseOver(e);
+                if (this.onCellOver) this.onCellOver(e);
             })
             .on('mouseout', (e) => {   // kursor nad komórką
                 this.removePointer(e);
-                if (this.onMouseOut) this.onMouseOut(e);
+                if (this.onCellOut) this.onCellOut(e);
             })
             .on('click', (e) => {  // lewy przycisk myszy
-                if (this.onLeftClick) this.onLeftClick(e);
+                if (this.onClickLeft) this.onClickLeft(e);
             })
             .on('contextmenu', (e) => { // prawy przycisk myszy
-                if (this.onRightClick) this.onRightClick(e);
+                if (this.onClickRight) this.onClickRight(e);
             });
 
     }
@@ -103,12 +113,13 @@ class Board extends Interface {
     }
 
     // metoda sprawdzająca czy statek (ship) mieści się na planysz
-    inBoard(ship) {
+    shipInBoard(ship) {
+        let self = this;
         let mastsCount = ship.masts.length;
 
         const _inBound = function (x, y) {
-            return ((x >= 0 && x < this.width &&
-                y >= 0 && y < this.height));
+            return ((x >= 0 && x < self.width &&
+                y >= 0 && y < self.height));
         }
 
         let x1 = ship.x,
@@ -116,11 +127,11 @@ class Board extends Interface {
             x2 = ship._pos(mastsCount - 1).x,
             y2 = ship._pos(mastsCount - 1).y;
 
-        return (_inBound(x1, y1) && _inPool(x2, y2));
+        return (_inBound(x1, y1) && _inBound(x2, y2));
     }
 
     _index(x, y) {
-        return x + y * this.board.width;
+        return x + y * this.width;
     }
 
     // metoda sprawdza, czy statek (ship) nie koliduje z innymi statami na planszy

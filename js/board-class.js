@@ -13,14 +13,13 @@ class Board extends Interface {
         this.player = player;
         this._containerID = this.player.id;
         c.prop("id", this.player.id)
-            .addClass('board hidden');
+            .addClass('board');
 
         this.width = width;
         this.height = height;
         // this.screen = $(`<div id="board-${this.player.id}"/>`).addClass('board hidden');
         this.boardCells = [];   // tablica przechowująca referencje do elementów pól planszy
         this.ships = [];        // tablica przechowująca statki na planszy
-
 
         // tworzenie elementów HTML planszy
         for (let y = 0; y < this.height; y++) {
@@ -34,30 +33,13 @@ class Board extends Interface {
             this._container.append(row);
         }
 
+        // inicjacja zewnętrznych zdarzeń
         this.onCellOver = null;
         this.onCellOut = null;
         this.onClickLeft = null;
         this.onClickRight = null;
 
-        this._container.appendTo('#game');
-    }
-
-    // usunięcie planszy
-    removeBoard() {
-        this.hideBoard();
-        this._container.detach();
-        delete this.boardCells;
-    }
-
-    // pokazanie planszy
-    showBoard(big = false) {
-        if (big)
-            this._container.addClass('battle')
-        else
-            this._container.removeClass('battle');
-        this._container.removeClass('hidden');
-
-        // zdarzenia dla planszy
+        // inicjacja interfejsu oraz jego zdarzeń
         this.build('div.cell', 'cells')
             .on('mouseover', (e) => { // kursor nad komórką
                 this.placePointer(e);
@@ -76,17 +58,47 @@ class Board extends Interface {
 
     }
 
+    // usunięcie planszy
+    removeBoard() {
+        this.onCellOver = null;
+        this.onCellOut = null;
+        this.onClickLeft = null;
+        this.onClickRight = null;
+
+        this.hideBoard();
+
+        this._container.detach();
+
+        delete this.boardCells;
+    }
+
+    // pokazanie planszy
+    showBoard() {
+        // zdarzenia dla planszy
+
+        this._container.appendTo('#game');
+    }
+
     // ukrycie planszy
     hideBoard() {
-        this._container.removeClass('battle')
-        this._container.addClass('hidden');
-
-        this._container.find('div.cell').off('mouseover mouseout click contextmenu');
+        this._container.detach();
+        //        this._container.find('div.cell').off('mouseover mouseout click contextmenu');
     }
 
     //
     //
     //
+
+    // metody ustawiają rodzaj wyświetlanej planszy
+    // editBoard to plansza mniejsza, przeznaczona do ustawiania staków, znajduje się po lewej stronie ekranu
+    setEditBoard() {
+        this._container.removeClass('battle');
+    }
+
+    // setGameBoard ustawia na planszę gry: jest ustawiona na środku ekranu i jest większa od planszy do ustawiania starków
+    setGameBoard() {
+        this._container.addClass('battle')
+    }
 
     // dodaje statek do planszy
     addShip(ship) {

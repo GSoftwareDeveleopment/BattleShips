@@ -70,77 +70,56 @@ class Human extends Player {
 
     setShip(e) {
         e.preventDefault();
-        /*
-                let player = this.game.players[this.currentPlayer];
-        
-                // jeżeli gracz nie wybrał statku z listy...
-                if (!this.currentShip) {
-                    this.currentCell = $(e.currentTarget);
-                    let x = this.currentCell.data('col'),
-                        y = this.currentCell.data('row');
-        
-                    // ...sprawdź, czy "kliknięte" miejsce na mapie, zawiera statek...
-                    let ship = this.playerBoard.shipInPos(x, y);
-                    if (ship) {
-                        // ------------------------------------------------------------------- POBRANIE STATKU Z PLANSZY GRACZA
-                        this.currentShip = ship.ship;
-        
-                        let shipdata = this.findShipList(this.currentShip.shipType);
-                        // jeżeli wybrany statek został znaleziony w doku gracza (dockyard) to...
-                        if (shipdata) {
-                            // ... oznacz pobrany statek jako wybrany na liście statków
-                            this.selectedShip = shipdata.mainField.addClass('selected');
-        
-                            // ... zwiększ ilość statków w doku (ponieważ, pobieramy statek z mapy :) )
-                            shipdata.Q++;
-        
-                            // ... usuń statek z planszy gracza
-                            // ... zakualizuj planszę gracza
-                            this.playerBoard.removeShip(ship.id);
-        
-                            this.currentShip.draw();
-                        }
-                        // odtwórz dźwięk
-                        this.game.assets.sounds['pop'].play();
-                    }
-                } else {
-                    // ----------------------------------------------------------------------- DODANIE STATKU DO PLANSZY GRACZA
-        
-                    // sprawdź, czy statek może być odłożony
-                    if (this.currentShip.inBoard() && !this.currentShip.isOverlaped()) {
-        
-                        let shipdata = this.findShipList(this.currentShip.shipType);
-                        // jeżeli wybrany statek został znaleziony w doku gracza (dockyard) to...
-                        if (shipdata && shipdata.Q > 0) {
-                            // ... zmniejsz ilość statków w doku
-                            shipdata.Q--;
-        
-                            // dodaj statek do planszy gracza
-                            // zaktualizuj planszę gracza
-                            this.playerBoard.addShip(this.currentShip);
-        
-                            // odtwórz dźwięk
-                            this.game.assets.sounds['splash'].play();
-                        }
-        
-                        // odznaczenie wybranego statku na liście
-                        this.unselectShip();
-                    } else {
-                        this.game.assets.sounds['error'].play();
-                    }
+
+        let currentShip = this.setupShips.currentShip;
+        // jeżeli gracz nie wybrał statku z listy...
+        if (!currentShip) {
+            let currentCell = $(e.currentTarget),
+                x = currentCell.data('col'),
+                y = currentCell.data('row');
+
+            let ship = this.board.shipInPos(x, y);
+            if (ship) {
+                // ------------------------------------------------------------------- POBRANIE STATKU Z PLANSZY GRACZA
+                let currentShip = ship.ship;
+                if (this.setupShips.dockyardList.changeQuantity(currentShip.shipType, 1)) {
+                    this.setupShips.dockyardList.setShip(currentShip.shipType);
+                    this.board.removeShip(ship.id);
+                    this.board.drawShip(currentShip);
+
+                    this.game.assets.sounds['pop'].play();
                 }
-        
-                // zaktualizuj listę statków
-                this.updateShipList();
-        
-                if (player.board.countShips() > 0) {
-                    this.interface['btn']['done'].prop('disabled', false).removeClass('disabled');
-                    this.interface['btn']['battle'].prop('disabled', false).removeClass('disabled').addClass('green');
+                this.setupShips.currentShip = currentShip;
+            } else {
+                this.game.assets.sounds['error'].play();
+            }
+        } else {
+            // ----------------------------------------------------------------------- DODANIE STATKU DO PLANSZY GRACZA
+
+            // sprawdź, czy statek może być odłożony
+            if (this.board.shipInBoard(currentShip) && !this.board.isOverlaped(currentShip)) {
+
+                if (this.setupShips.dockyardList.changeQuantity(currentShip.shipType, - 1)) {
+                    this.board.addShip(currentShip);
+                    this.game.assets.sounds['splash'].play();
                 } else {
-                    this.interface['btn']['done'].prop('disabled', true).addClass('disabled');
-                    this.interface['btn']['battle'].prop('disabled', true).addClass('disabled').removeClass('green');
+                    this.board.redraw();
+                    // odznaczenie wybranego statku na liście
+                    this.setupShips.dockyardList.unselectShip();
                 }
-        */
+
+            } else {
+                this.game.assets.sounds['error'].play();
+            }
+        }
+
+        // if (player.board.countShips() > 0) {
+        //     this.interface['btn']['done'].prop('disabled', false).removeClass('disabled');
+        //     this.interface['btn']['battle'].prop('disabled', false).removeClass('disabled').addClass('green');
+        // } else {
+        //     this.interface['btn']['done'].prop('disabled', true).addClass('disabled');
+        //     this.interface['btn']['battle'].prop('disabled', true).addClass('disabled').removeClass('green');
+        // }
     }
 
 }

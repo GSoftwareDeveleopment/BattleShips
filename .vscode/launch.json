@@ -5,9 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "devtools-for-chrome",
+            "type": "chrome",
             "request": "launch",
-            "name": "Open in DevTools",
+            "runtimeArgs": [
+                "--auto-open-devtools-for-tabs"
+            ],
+            "name": "Open in Chrome",
             "file": "${workspaceFolder}/index.html"
             // "url": "http://localhost:8080",
             // "webRoot": "${workspaceFolder}"

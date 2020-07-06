@@ -4,6 +4,7 @@ class Interface {
             this._containerID = container.containerID;
             this._container = container.container;
         } else {
+            this._containerID = container.prop('id');
             this._container = container;
         }
         this._elements = new Array();
@@ -13,23 +14,26 @@ class Interface {
         console.groupCollapsed(`Initialize interface '${this._containerID}'.'${group}'...`)
 
         this[group] = new Array();
-        this._elements[group] = this._container.find(selector);
-        console.log(`${this._elements.length} element(s) in interface found`);
-
-        this._elements[group].each((index, el) => {
-            let _el = $(el);
-            if (!_el.hasClass('interface-exlude')) {
-                let id = _el.prop('id');
-                this[group][id] = _el;
-                if (initList && initList[id]) {
-                    console.log(`interface '${this._containerID}'.'${group}'.'${id}' initialize...`);
-                    initList[id](_el);
+        let elements = this._container.find(selector);
+        console.log(`${elements.length} element(s) in interface found`);
+        if (elements.length > 0) {
+            this._elements[group] = elements;
+            elements.each((index, el) => {
+                let _el = $(el);
+                if (!_el.hasClass('interface-exlude')) {
+                    let id = _el.prop('id');
+                    this[group][id] = _el;
+                    if (initList && initList[id]) {
+                        console.log(`interface '${this._containerID}'.'${group}'.'${id}' initialize...`);
+                        initList[id](_el);
+                    }
                 }
-            }
-        });
-
+            });
+        } else {
+            console.error(`Can't find '${selector}' in '${this._containerID}' :( Interface is not build`);
+        }
         console.groupEnd();
-        return this._elements[group];
+        return elements;
     }
 
 }

@@ -9,6 +9,7 @@ class Human extends Player {
         this.setupShips = _setupShips;
 
         // pokazanie planszy gracza
+        this.board.setEditBoard();
         this.board.showBoard();
 
         this.board.onCellOver = (e) => { this.placePointer(e); };
@@ -120,4 +121,11 @@ class Human extends Player {
         }
     }
 
+    setupShipsDone() {
+        this.board.hideBoard();
+        this.board.onCellOver = null;
+        this.board.onCellOut = null;
+        this.board.onClickLeft = null;
+        this.board.onClickRight = null;
+    }
 }

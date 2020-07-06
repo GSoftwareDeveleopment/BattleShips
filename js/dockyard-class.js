@@ -86,6 +86,15 @@ class Dockyard extends Interface {
         return false;
     }
 
+    setShip(shipType) {
+        if (this.selectedShip) {
+            this.selectedShip.removeClass('selected');
+        }
+        this.selectedShipType = shipType;
+        this.selectedShip = this.getShipData(this.selectedShipType).mainField;
+        this.selectedShip.addClass('selected');
+    }
+
     // obsługa listy statków gracza (dockyard-lisy)
     selectShip(e) {
 
@@ -104,6 +113,7 @@ class Dockyard extends Interface {
             } else {
                 if (this.onNotAvailable) this.onNotAvailable(this.selectedShipType);
                 this.selectedShip = null;
+                this.selectedShipType = null;
             }
         } else {
             if (this.onUnselect) this.onUnselect(this.selectedShipType);
@@ -121,4 +131,16 @@ class Dockyard extends Interface {
         if (this.onUnselect) this.onUnselect(this.selectedShipType)
     }
 
+    changeQuantity(shipType, dQ) {
+        if (dQ === 0) return false;
+
+        let ship = this.getShipData(shipType);
+
+        if ((dQ < 0 && ship.Q > 0) || (dQ > 0 && ship.Q < ship.maxQ)) { // limit
+            ship.Q += dQ;
+            this.update();
+            return true;
+        }
+        return false;
+    }
 }

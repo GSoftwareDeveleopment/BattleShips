@@ -162,7 +162,7 @@ class Board extends Interface {
             cell = this.boardCells[id];
 
             if (mode !== shipDrawingMode.clear) {
-                if (mode)
+                if (mode === shipDrawingMode.mast)
                     cell.addClass('mast')
                 else
                     cell.addClass('edit');
@@ -180,7 +180,7 @@ class Board extends Interface {
     drawAllShips() {
         // TO DO: spróbuj zamienić to na pętlę for (ship of this.ships)
         for (let shipID in this.ships) {
-            this.drawShip(this.ships[shipID], shipDrawingMode.masts)
+            this.drawShip(this.ships[shipID], shipDrawingMode.mast)
             // this.ships[shipID].draw(1);
         }
     }

@@ -1,0 +1,152 @@
+// --------------------------------------------
+
+SoundFile {
+    constructor(url, autoload=true)
+    load()
+    play(fade=false)
+    stop(fade=false)
+}
+
+ImageFile {
+    constructor(url, autoload=true)
+    load()
+}
+
+// ------------------------------------------
+
+Game {
+    constructor(_assets)
+    getResByName(name)
+    goStart()
+    goSetupShips(playmode)
+    goAbort()
+    goBattle()
+    goGameover()
+    goRevange()
+    run()
+}
+
+// ----------------------------------------
+
+Interface {
+    constructor(container)
+    build(selector, group, initList)
+}
+
+Dockyard -> Interface {
+    constructor(dockyardData, container)
+    remove()
+    update()
+    getShips(shipType)
+    setShip(shipType)
+    selectShip9e)
+    unselectShip(e)
+    changeQuantity(shipType,dQ)
+}
+
+Board -> Interface {
+    constructor(player, width, height) {
+    removeBoard()
+    showBoard(big=false)
+    hideBoard()
+
+    addShip(ship)
+    removeShip(shipID)
+    clear()
+    drawShip(ship,mode=shipDrawingMode.edit)
+    drawAllShips()
+    redraw()
+
+    isOverlaped(ship)
+    countShips()
+    checkBoard()
+    shipInPos(x,y)
+    shipInBoard(ship)
+    _index(x,y)
+
+    placePointer(e)
+    removePointer(e)
+    hidePointer()
+}
+
+// -------------------------------------------------
+
+Player {
+    constructor(_game, mode, id)
+    reset()
+    removePlayer()
+}
+
+Human -> Player {
+    constructor(_game,id);
+    prepare2SetupShips(_setupShips)
+    placePointer(e)
+    removePointer(e)
+    rotateShip(e)
+    setShip(e)
+}
+
+// ----------------------------------------------
+
+Ship {
+    constructor(shipType, dir)
+    clone()
+    isHit(hitx, hity)
+    exist()
+    damage()
+}
+
+// ---------------------------------------------
+
+Screen {
+    constructor(containerID, _game)
+    showScreen()
+    hideScreen()
+    buildInterface(selector, group, initList)
+}
+
+Start -> Screen {
+    constructor(_container, _game)
+    menuButton(e)
+    prepare2Battle(mode)
+}
+
+SetShipsScreen -> Screen {
+    constructor(_container, _game)
+    showScreen()
+    hideScreen()
+    prepareScreen()
+    help()
+    abort()
+    done()
+}
+
+SetHelpScreen -> Screen {
+    constructor_container, _game)
+    showScreen()
+    hideScreen()
+}
+
+BattleScreen -> Screen {
+    constructor(_container, _game)
+    showScreen()
+    hideScreen()
+    showText(textID, text2, onFinish)
+    preparePlayerScreen()
+    score(points)
+    fire(e)
+    nextTurn()
+    stats()
+    surrender()
+    finishBattle(isSurrender)
+}
+
+Stats -> Screen {
+    constructor(_container,_game)
+    showScreen()
+    hideScreen()
+    prepareStats4Player(tabid, player)
+    hideAllTabs()
+    showTab(tabiid)
+close()
+}

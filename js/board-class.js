@@ -84,112 +84,9 @@ class Board extends Interface {
         this._container.find('div.cell').off('mouseover mouseout click contextmenu');
     }
 
-    /* zdarzenie dla mapy (przesówanie kursorem w obszarze mapy) */
-
-    placePointer(e) {
-        e.preventDefault();
-        $(e.currentTarget).addClass('choiced');
-    }
-
-    removePointer(e) {
-        e.preventDefault();
-        $(e.currentTarget).removeClass('choiced');
-    }
-
-    hidePointer() {
-        this.screen.find('div.cell.choiced').removeClass('choiced');
-    }
-
     //
     //
     //
-
-    // czyszczenie planszy
-    clear() {
-        // TO DO: spróbuj zmienić to na 'for (let cellid of this.boardCells)'
-        for (let cellID in this.boardCells) {
-            this.boardCells[cellID].removeClass('error edit aim mast mishit hit');
-        }
-    }
-
-    // metoda sprawdzająca czy statek (ship) mieści się na planysz
-    shipInBoard(ship) {
-        let self = this;
-        let mastsCount = ship.masts.length;
-
-        const _inBound = function (x, y) {
-            return ((x >= 0 && x < self.width &&
-                y >= 0 && y < self.height));
-        }
-
-        let x1 = ship.x,
-            y1 = ship.y,
-            x2 = ship._pos(mastsCount - 1).x,
-            y2 = ship._pos(mastsCount - 1).y;
-
-        return (_inBound(x1, y1) && _inBound(x2, y2));
-    }
-
-    _index(x, y) {
-        return x + y * this.width;
-    }
-
-    // metoda sprawdza, czy statek (ship) nie koliduje z innymi statami na planszy
-    isOverlaped(ship) {
-        let nx, ny, id, isOverlap = false;
-
-        for (let i = 0; i < ship.masts.length; i++) {
-            ({ x: nx, y: ny } = ship._pos(i));
-
-            for (let shipID in this.ships) {
-                if (this.ships[shipID].isHit(nx, ny) !== false) {
-                    id = this._index(nx, ny);
-                    this.boardCells[id].addClass('error');
-                    isOverlap = true;
-                }
-            }
-        }
-        return isOverlap;
-    }
-
-    drawShip(ship, mode = shipDrawingMode.edit) {
-        let nx, ny, id, cell;
-
-        for (let i = 0; i < ship.masts.length; i++) {
-            ({ x: nx, y: ny } = ship._pos(i));
-
-            id = this._index(nx, ny);
-            cell = this.boardCells[id];
-
-            if (mode !== shipDrawingMode.clear) {
-                if (mode === shipDrawingMode.mast)
-                    cell.addClass('mast')
-                else
-                    cell.addClass('edit');
-
-                if (!ship.masts[i]) {
-                    cell.addClass('mast hit');
-                }
-            } else {
-                cell.removeClass('mast hit');
-            }
-        }
-    }
-
-    // rysowanie wszystkich statków na planszy
-    drawAllShips() {
-        // TO DO: spróbuj zamienić to na pętlę for (ship of this.ships)
-        for (let shipID in this.ships) {
-            this.drawShip(this.ships[shipID], shipDrawingMode.mast)
-            // this.ships[shipID].draw(1);
-        }
-    }
-
-    // odświerzenie planszy
-    redraw() {
-        this.clear();
-        this.drawAllShips();
-    }
 
     // dodaje statek do planszy
     addShip(ship) {
@@ -234,6 +131,79 @@ class Board extends Interface {
         return;
     }
 
+    //
+    //
+    //
+
+    // czyszczenie planszy
+    clear() {
+        // TO DO: spróbuj zmienić to na 'for (let cellid of this.boardCells)'
+        for (let cellID in this.boardCells) {
+            this.boardCells[cellID].removeClass('error edit aim mast mishit hit');
+        }
+    }
+
+    // rysowanie statku na planszy w trybie 'mode'
+    drawShip(ship, mode = shipDrawingMode.edit) {
+        let nx, ny, id, cell;
+
+        for (let i = 0; i < ship.masts.length; i++) {
+            ({ x: nx, y: ny } = ship._pos(i));
+
+            id = this._index(nx, ny);
+            cell = this.boardCells[id];
+
+            if (mode !== shipDrawingMode.clear) {
+                if (mode === shipDrawingMode.mast)
+                    cell.addClass('mast')
+                else
+                    cell.addClass('edit');
+
+                if (!ship.masts[i]) {
+                    cell.addClass('mast hit');
+                }
+            } else {
+                cell.removeClass('mast hit');
+            }
+        }
+    }
+
+    // rysowanie wszystkich statków na planszy
+    drawAllShips() {
+        // TO DO: spróbuj zamienić to na pętlę for (ship of this.ships)
+        for (let shipID in this.ships) {
+            this.drawShip(this.ships[shipID], shipDrawingMode.mast)
+        }
+    }
+
+    // odświerzenie planszy
+    redraw() {
+        this.clear();
+        this.drawAllShips();
+    }
+
+    //
+    //
+    //
+
+    // metoda sprawdza, czy statek (ship) nie koliduje z innymi statami na planszy
+    isOverlaped(ship) {
+        let nx, ny, id, isOverlap = false;
+
+        for (let i = 0; i < ship.masts.length; i++) {
+            ({ x: nx, y: ny } = ship._pos(i));
+
+            for (let shipID in this.ships) {
+                if (this.ships[shipID].isHit(nx, ny) !== false) {
+                    id = this._index(nx, ny);
+                    this.boardCells[id].addClass('error');
+                    isOverlap = true;
+                }
+            }
+        }
+        return isOverlap;
+    }
+
     // zlicza ilość istniejący jeszcze na planszy statków
     // (zlicza również tez trafione, ale pływające!)
     countShips() {
@@ -271,5 +241,45 @@ class Board extends Interface {
         return false;
     }
 
+    // metoda sprawdzająca czy statek (ship) mieści się na planysz
+    shipInBoard(ship) {
+        let self = this;
+        let mastsCount = ship.masts.length;
+
+        const _inBound = function (x, y) {
+            return ((x >= 0 && x < self.width &&
+                y >= 0 && y < self.height));
+        }
+
+        let x1 = ship.x,
+            y1 = ship.y,
+            x2 = ship._pos(mastsCount - 1).x,
+            y2 = ship._pos(mastsCount - 1).y;
+
+        return (_inBound(x1, y1) && _inBound(x2, y2));
+    }
+
+    // metoda wylicza index na podstawie koordynatów x,y
+    _index(x, y) {
+        return x + y * this.width;
+    }
+
+    //
+    // zdarzenie dla mapy
+    //
+
+    placePointer(e) {
+        e.preventDefault();
+        $(e.currentTarget).addClass('choiced');
+    }
+
+    removePointer(e) {
+        e.preventDefault();
+        $(e.currentTarget).removeClass('choiced');
+    }
+
+    hidePointer() {
+        this.screen.find('div.cell.choiced').removeClass('choiced');
+    }
 
 }

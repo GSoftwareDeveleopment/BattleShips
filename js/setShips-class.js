@@ -34,6 +34,9 @@ class SetShipsScreen extends Screen {
         // przygotowanie ekranu dla pierwszego gracza
         this.currentPlayer = 0;
 
+        this.interface['btn']['done'].removeClass('hidden').prop('disabled', true).addClass('disabled');
+        this.interface['btn']['battle'].addClass('green hidden');
+
         this.prepareScreen();
     }
 
@@ -68,19 +71,6 @@ class SetShipsScreen extends Screen {
             this.currentShip = null;
         };
 
-
-
-        // czy to ostatni gracz?
-        if (this.currentPlayer < this.game.players.length - 1) {
-            // nie
-            this.interface['btn']['done'].removeClass('hidden').prop('disabled', true).addClass('disabled');
-            this.interface['btn']['battle'].addClass('green hidden');
-        } else {
-            // tak
-            this.interface['btn']['done'].addClass('hidden');
-            this.interface['btn']['battle'].removeClass('green hidden').prop('disabled', true).addClass('disabled');
-        }
-
         player.prepare2SetupShips(this);
 
     }
@@ -114,23 +104,37 @@ class SetShipsScreen extends Screen {
     done() {
         this.game.assets.sounds['click'].play();
 
-        let player = this.game.players[this.currentPlayer];
-
-        // usunięcie zdarzeń dla planszy aktualnego gracza
-        this.playerBoard.screen.find('div.cell').off('mouseover click contextmenu');
-
-        // ukrycie planszy gracza
-        player.board.hideBoard();
-
-        // skasowanie (ukrycie) listy statków (dockyard-list)
-        this.dockyardList.empty();
+        let currentPlayer = this.game.players[this.currentPlayer];
 
         // zapamiętanie nazwy gracza
-        player.name = this.screen.find('input#player-name').val();
+        currentPlayer.name = this.interface['textbox']['player-name'].val();
+
+        // ukrycie planszy gracza
+        // TO DO: umieść w przyszłości ogólną metodę w Interface Hide()
+        currentPlayer.board.hideBoard();
+
+        // skasowanie (ukrycie) listy statków (dockyard-list)
+        // TO DO: umieść w Interface metodę Remove()
+        this.dockyardList.remove();
 
         // zmiana aktualnego gracza lub przejście do bitwy
         this.currentPlayer++;
-        if (this.currentPlayer < this.game.players.length)
+        if (this.currentPlayer < this.game.players.length) {
+            // tak
+            this.interface['btn']['done'].addClass('hidden');
+            this.interface['btn']['battle'].removeClass('green hidden').prop('disabled', true).addClass('disabled');
             this.prepareScreen();
+        }
     }
+
+    enableButton() {
+        this.interface['btn']['done'].prop('disabled', false).removeClass('disabled');
+        this.interface['btn']['battle'].prop('disabled', false).removeClass('disabled').addClass('green');
+    }
+
+    disableBatton() {
+        this.interface['btn']['done'].prop('disabled', true).addClass('disabled');
+        this.interface['btn']['battle'].prop('disabled', true).addClass('disabled').removeClass('green');
+    }
+
 }

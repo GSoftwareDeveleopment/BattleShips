@@ -15,14 +15,16 @@ class SetShipsScreen extends Screen {
                 el.on('click', () => { this.abort(); });
             },
             'done': (el) => {
-                el.on('click', () => { this.done(); });
+                el.on('click', () => {
+                    this.done();
+                });
             },
             'battle': (el) => {
                 el.on('click', () => {
                     this.done();
                     this.game.goBattle();
                 });
-            },
+            }
         });
     }
 
@@ -72,7 +74,6 @@ class SetShipsScreen extends Screen {
         };
 
         player.prepare2SetupShips(this);
-
     }
 
     /* obsługa zdarzeń przycisków */
@@ -90,7 +91,7 @@ class SetShipsScreen extends Screen {
         let player = this.game.players[this.currentPlayer];
 
         // ukrycie planszy gracza
-        player.board.hideBoard();
+        player.board.removeBoard();
 
         this.dockyardList.remove();
 
@@ -106,12 +107,10 @@ class SetShipsScreen extends Screen {
 
         let currentPlayer = this.game.players[this.currentPlayer];
 
+        currentPlayer.setupShipsDone();
+
         // zapamiętanie nazwy gracza
         currentPlayer.name = this.interface['textbox']['player-name'].val();
-
-        // ukrycie planszy gracza
-        // TO DO: umieść w przyszłości ogólną metodę w Interface Hide()
-        currentPlayer.board.hideBoard();
 
         // skasowanie (ukrycie) listy statków (dockyard-list)
         // TO DO: umieść w Interface metodę Remove()

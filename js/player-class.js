@@ -5,7 +5,7 @@ class Player {
         this.id = id;
         this.name = id;
 
-        this.resetPlayer();
+        this.reset();
     }
 
     reset() {

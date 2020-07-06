@@ -13,7 +13,7 @@ class Board extends Interface {
         this.player = player;
         this._containerID = this.player.id;
         c.prop("id", this.player.id)
-            .addClass('board');
+            .addClass('board hidden');
 
         this.width = width;
         this.height = height;
@@ -32,6 +32,8 @@ class Board extends Interface {
             }
             this._container.append(row);
         }
+
+        this._container.appendTo('#game');
 
         // inicjacja zewnętrznych zdarzeń
         this.onCellOver = null;
@@ -74,15 +76,12 @@ class Board extends Interface {
 
     // pokazanie planszy
     showBoard() {
-        // zdarzenia dla planszy
-
-        this._container.appendTo('#game');
+        this._container.removeClass('hidden');
     }
 
     // ukrycie planszy
     hideBoard() {
-        this._container.detach();
-        //        this._container.find('div.cell').off('mouseover mouseout click contextmenu');
+        this._container.addClass('hidden');
     }
 
     //

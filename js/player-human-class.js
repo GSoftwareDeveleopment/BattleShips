@@ -113,13 +113,11 @@ class Human extends Player {
             }
         }
 
-        // if (player.board.countShips() > 0) {
-        //     this.interface['btn']['done'].prop('disabled', false).removeClass('disabled');
-        //     this.interface['btn']['battle'].prop('disabled', false).removeClass('disabled').addClass('green');
-        // } else {
-        //     this.interface['btn']['done'].prop('disabled', true).addClass('disabled');
-        //     this.interface['btn']['battle'].prop('disabled', true).addClass('disabled').removeClass('green');
-        // }
+        if (this.board.countShips() > 0) {
+            this.setupShips.enableButton();
+        } else {
+            this.setupShips.disableButton();
+        }
     }
 
 }

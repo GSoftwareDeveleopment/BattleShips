@@ -7,6 +7,6 @@ The intention of this project is to present the construction of the game using O
 # NOTE
 https://service.a-bolt.pl/BattleShips/ <- Here is a working version of the game where you can play with another person.
 
-Here is a working version of the game where you can play with another person.
+
 
 I am currently working on implementing a computer for the game, and in the future I want to use AI

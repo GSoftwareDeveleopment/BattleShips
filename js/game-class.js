@@ -13,6 +13,7 @@ class Game {
             backgroundSound: false
         };
 
+        console.groupCollapsed('Initialize game');
         this.assets = _assets;
         this.assets.sounds["music"].obj.loop = true;
         this.assets.sounds["sea"].obj.loop = true;
@@ -22,6 +23,7 @@ class Game {
         this.screenSetupHelp = new SetHelpScreen('set-help', this);
         this.screenBattle = new BattleScreen('battle', this);
         // this.screenStats = new StatsScreen('stats', this);
+        console.groupEnd();
     }
 
     getResByName(name) {
@@ -55,14 +57,17 @@ class Game {
             // stworzenie graczy wg. typu rozgrywki (playmode)
             switch (playmode) {
                 case "cvc": // computer vs computer
-                    addNewPlayer(0, 'computer-1');
-                    addNewPlayer(0, 'computer-2');
+                    // addNewPlayer(0, 'computer-1');
+                    // addNewPlayer(0, 'computer-2');
+                    console.log('Computer vs Computer mode is not implemented yet :(');
                     break;
                 case "hvc": // human vs computer
-                    addNewPlayer(1, 'human');
-                    addNewPlayer(0, 'computer');
+                    // addNewPlayer(1, 'human');
+                    // addNewPlayer(0, 'computer');
+                    console.log('Human vs Computer mode is not implemented yet :(');
                     break;
                 case "hvh": // human vs human
+                    console.log('Starting Human vs Human game...');
                     this.players.push(new Human(this, 'human-1'));
                     this.players.push(new Human(this, 'human-2'));
                     /*

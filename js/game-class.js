@@ -38,7 +38,7 @@ class Game {
 
     goStart() {
         this.players = [];
-        // this.screenStats.hideScreen(); // konieczność, zamknięcie screenStats po Gameover
+        this.screenStats.hideScreen(); // konieczność, zamknięcie screenStats po Gameover
         this.screenStart.showScreen();
     }
 

@@ -102,6 +102,7 @@ class SetShipsScreen extends Screen {
 
     // przejście do ustawień następnego gracza
     done() {
+        console.log(`Player '${this.currentPlayer.id}' has finish ships setup.`);
         this.game.assets.sounds['click'].play();
 
         let currentPlayer = this.game.players[this.currentPlayer];
@@ -121,6 +122,7 @@ class SetShipsScreen extends Screen {
             // tak
             this.interface['btn']['done'].addClass('hidden');
             this.interface['btn']['battle'].removeClass('green hidden').prop('disabled', true).addClass('disabled');
+            console.log(`Change to next player...`);
             this.prepareScreen();
         }
     }
@@ -130,7 +132,7 @@ class SetShipsScreen extends Screen {
         this.interface['btn']['battle'].prop('disabled', false).removeClass('disabled').addClass('green');
     }
 
-    disableBatton() {
+    disableButton() {
         this.interface['btn']['done'].prop('disabled', true).addClass('disabled');
         this.interface['btn']['battle'].prop('disabled', true).addClass('disabled').removeClass('green');
     }

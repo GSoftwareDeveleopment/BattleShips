@@ -22,7 +22,7 @@ class Game {
         this.screenSetupShips = new SetShipsScreen('game-set', this);
         this.screenSetupHelp = new SetHelpScreen('set-help', this);
         this.screenBattle = new BattleScreen('battle', this);
-        // this.screenStats = new StatsScreen('stats', this);
+        this.screenStats = new StatsScreen('stats', this);
         console.groupEnd();
     }
 

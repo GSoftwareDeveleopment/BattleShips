@@ -135,14 +135,19 @@ class Human extends Player {
     //
 
     prepare2Battle(_battle) {
-        // this.opponentPlayer.board.screen.find('div.cell')
-        //     .off('click')
-        //     .on('click', (e) => { this.fire(e); });           // lewy przycisk myszy
-        // this.score();
+        this.battleBoard.onClickLeft = (e) => {
+            let cell = $(e.currentTarget),
+                x = cell.data('col'),
+                y = cell.data('row');
+            _battle.fire(x, y);
+        };
     }
 
     beginTurn(_battle) {
         this.battleBoard.showBoard();
+    }
+
+    fire(_battle) {
     }
 
     endTurn(_battle) {

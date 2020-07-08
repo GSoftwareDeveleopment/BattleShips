@@ -47,13 +47,6 @@ class Game {
         if (playmode) {
             this.playmode = playmode;
 
-            /*
-            
-                        const addNewPlayer = (mode, id) => {
-                            let newPlayer = new Player(_game, mode, id);
-                            this.players.push(newPlayer);
-                        }
-            */
             // stworzenie graczy wg. typu rozgrywki (playmode)
             switch (playmode) {
                 case "cvc": // computer vs computer
@@ -70,10 +63,6 @@ class Game {
                     console.log('Starting Human vs Human game...');
                     this.players.push(new Human(this, 'human-1'));
                     this.players.push(new Human(this, 'human-2'));
-                    /*
-                                        addNewPlayer(1, 'human-1');
-                                        addNewPlayer(1, 'human-2');
-                    */
                     break;
             }
 
@@ -90,7 +79,7 @@ class Game {
 
         this.screenSetupShips.hideScreen();
         this.goStart();
-        // this.screenStart.showScreen();
+        this.screenStart.showScreen();
     }
 
     goBattle() {

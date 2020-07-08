@@ -1,8 +1,8 @@
 class Human extends Player {
 
     constructor(_game, id) {
+        console.log('creating player: Human...');
         super(_game, 1, id);
-        console.log('creating player: Human...')
     }
 
     prepare2SetupShips(_setupShips) {
@@ -122,10 +122,30 @@ class Human extends Player {
     }
 
     setupShipsDone() {
+        this.board.clear();
         this.board.hideBoard();
         this.board.onCellOver = null;
         this.board.onCellOut = null;
         this.board.onClickLeft = null;
         this.board.onClickRight = null;
+    }
+
+    //
+    //
+    //
+
+    prepare2Battle(_battle) {
+        // this.opponentPlayer.board.screen.find('div.cell')
+        //     .off('click')
+        //     .on('click', (e) => { this.fire(e); });           // lewy przycisk myszy
+        // this.score();
+    }
+
+    beginTurn(_battle) {
+        this.battleBoard.showBoard();
+    }
+
+    endTurn(_battle) {
+        this.battleBoard.hideBoard();
     }
 }

@@ -11,7 +11,7 @@ class Interface {
     }
 
     build(selector, group, initList) {
-        console.groupCollapsed(`Initialize interface '${this._containerID}'.'${group}'...`)
+        console.groupCollapsed(`Build interface '${this._containerID}'.'${group}'...`)
 
         this[group] = new Array();
         let elements = this._container.find(selector);
@@ -24,7 +24,7 @@ class Interface {
                     let id = _el.prop('id');
                     this[group][id] = _el;
                     if (initList && initList[id]) {
-                        console.log(`interface '${this._containerID}'.'${group}'.'${id}' initialize...`);
+                        console.log(`Initialize interface element '${this._containerID}'.'${group}'.'${id}'...`);
                         initList[id](_el);
                     }
                 }

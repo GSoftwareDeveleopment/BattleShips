@@ -2,18 +2,17 @@ class BattleScreen extends Screen {
     constructor(_container, _game) {
         super(_container, _game);
 
-        this.buildInterface('div.score', 'score');
+        this.interface.build('div.score', 'score');
         // this.scoretext = this.container.find('div.score');
 
-        this.buildInterface('button', 'btn');
-        // this.buildInterface('button', 'btn', {
-        //     'surrender': (el) => { el.on('click', () => { this.surrender(); }); },
-        //     'stats': (el) => { el.on('click', () => { this.stats(); }); }
-        // });
+        this.interface.build('button', 'btn', {
+            'surrender': (el) => { el.on('click', () => { this.surrender(); }); },
+            'stats': (el) => { el.on('click', () => { this.stats(); }); }
+        });
 
-        this.buildInterface('div.bigtext', 'texts');
-        for (let textID in this.interface['texts'])
-            this.interface['texts'][textID].addClass('hidden');
+        this.interface.build('div.bigtext', 'texts').each((id, el) => {
+            $(el).addClass('hidden');
+        });
 
         this.turn = 0;
         this.shots = 0;
@@ -28,10 +27,6 @@ class BattleScreen extends Screen {
 
         this._timer = setInterval(() => { this.duration++; }, 1000);
 
-        // czyszczenie plansz graczy
-        for (let player of this.game.players)
-            player.board.clear();
-
         // przełączenie muzyki
         if (this.game.settings.backgroundSound) {
             this.game.assets.sounds['music'].stop(true);
@@ -41,12 +36,8 @@ class BattleScreen extends Screen {
         this.interface['score'][''].removeClass('hidden').html('');
         // this.scoretext.removeClass('hidden').html('');
 
-        this.interface.build('button', 'btn', {
-            'surrender': (el) => { el.on('click', () => { this.surrender(); }); },
-            'stats': (el) => { el.on('click', () => { this.stats(); }); }
-        })
-
         super.showScreen();
+
         this.preparePlayerScreen();
     }
 
@@ -56,8 +47,8 @@ class BattleScreen extends Screen {
         this.game.assets.sounds['sea'].stop();
 
         // usuń zdarzenia
-        this.currentPlayer.board.screen.find('div.cell').off('click');
-        this.opponentPlayer.board.screen.find('div.cell').off('click');
+        this.currentPlayer.battleBoard.onClickLeft = null;
+        this.opponentPlayer.battleBoard.onClickLeft = null;
 
         this.interface['btn']['surrender'].addClass('hidden').off('click');
         this.interface['btn']['stats'].addClass('hidden').off('click');
@@ -83,29 +74,27 @@ class BattleScreen extends Screen {
     }
 
     preparePlayerScreen() {
-        if (this.opponentPlayer) {
-            this.opponentPlayer.board.hidePointer();
-            this.opponentPlayer.board.hideBoard();
-        }
-
-        // który gracz jest przeciwnikiem?
-        this.opponentPlayerID = this.currentPlayerID + 1 >= this.game.players.length ? 0 : this.currentPlayerID + 1;
-
-        this.currentPlayer = this.game.players[this.currentPlayerID];
-        this.opponentPlayer = this.game.players[this.opponentPlayerID];
-
-        this.opponentPlayer.board.showBoard(true); // true - pokaż planszę przeciwnika na środku
-
-        this.opponentPlayer.board.screen.find('div.cell')
-            .off('click')
-            .on('click', (e) => { this.fire(e); });           // lewy przycisk myszy
-        this.score();
+        this.assignPlayerSide();
 
         this.interface['btn']['surrender'].removeClass('hidden');
         this.interface['btn']['stats'].removeClass('hidden');
 
         this.showText('turn', this.currentPlayer.name);
         this.isFire = false;
+
+        this.currentPlayer.prepare2Battle(this);
+        this.opponentPlayer.prepare2Battle(this);
+
+        this.score(0);
+        this.currentPlayer.beginTurn(this);
+    }
+
+    assignPlayerSide() {
+        // określenie grających stron
+        this.opponentPlayerID = this.currentPlayerID + 1 >= this.game.players.length ? 0 : this.currentPlayerID + 1;
+
+        this.currentPlayer = this.game.players[this.currentPlayerID];
+        this.opponentPlayer = this.game.players[this.opponentPlayerID];
     }
 
     score(points) {
@@ -116,12 +105,9 @@ class BattleScreen extends Screen {
         }
         let scoreText = this.currentPlayer.name + '<br>SCORE:' + this.currentPlayer.score;
         this.interface['score'][''].html(scoreText);
-        // this.scoretext.html(scoreText);
     }
 
-    fire(e) {
-        e.preventDefault();
-
+    fire(firex, firey) {
         if (this.isFire)
             return
         else
@@ -130,10 +116,9 @@ class BattleScreen extends Screen {
         this.interface['btn']['surrender'].addClass('hidden');
         this.interface['btn']['stats'].addClass('hidden');
 
-        let currentCell = $(e.currentTarget),
-            x = currentCell.data('col'),
-            y = currentCell.data('row');
-        currentCell.addClass('aim');
+        let cellID = this.currentPlayer.battleBoard._index(firex, firey);
+        let cell = this.currentPlayer.battleBoard.boardCells[cellID];
+        cell.addClass('aim');
 
         this.currentPlayer.moves++;
         this.shots++;
@@ -141,56 +126,80 @@ class BattleScreen extends Screen {
         this.game.assets.sounds['cannon'].play();
 
         this.showText('fire', '', () => {
-            currentCell.removeClass('aim');
-            let hit = this.opponentPlayer.board.shipInPos(x, y);
+            cell.removeClass('aim');
+            let hit = this.opponentPlayer.board.shipInPos(firex, firey);
 
             console.log(hit);
             if (hit) { // statek trafiony?
-                hit.ship.masts[hit.mastID] = false;
+                hit.ship.masts[hit.mastID] = false; // ustaw trafiony masz na "zniszczony"
 
                 this.interface['btn']['surrender'].removeClass('hidden');
                 this.interface['btn']['stats'].removeClass('hidden');
 
                 if (hit.ship.exist()) { // nie zatopiony
-                    this.game.assets.sounds['hit1'].play();
-                    this.showText('hit', '+5', () => this.isFire = false);
-                    currentCell.addClass('hit');
-                    this.score(5);
+                    this.hit(cell, hit);
                 } else { // trafiony zatopiony
-                    this.game.assets.sounds['hit3'].play();
-                    if (this.game.settings.showSunkenShips)
-                        hit.ship.draw(0);
-                    this.showText('hit-sink', '+10', () => {
-                        this.isFire = false;
-                        if (this.opponentPlayer.board.checkBoard())
-                            this.finishBattle(false);
-                    });
-                    currentCell.addClass('hit');
-                    this.score(10);
+                    this.hitAndSunk(cell, hit);
                 }
             } else {
-                this.game.assets.sounds['miss'].play();
-                let text = ""
-                if (this.currentPlayer.score > 0)
-                    text = "-1";
-                this.showText('miss', text, () => {
-                    this.isFire = false;
-                    this.nextTurn();
-                });
-                currentCell.addClass('mishit');
-                this.score(-1);
+                this.miss(cell);
             }
         })
     }
 
+    hit(cell) {
+        this.game.assets.sounds['hit1'].play();
+        this.showText('hit', '+5', () => this.isFire = false);
+
+        cell.addClass('hit');
+
+        this.score(5);
+    }
+
+    hitAndSunk(cell, hit) {
+        this.game.assets.sounds['hit3'].play();
+
+        if (this.game.settings.showSunkenShips)
+            this.currentPlayer.battleBoard.drawShip(hit.ship, shipDrawingMode.mast);
+
+        this.showText('hit-sink', '+10', () => {
+            this.isFire = false;
+            if (this.opponentPlayer.board.checkBoard())
+                this.finishBattle(false);
+        });
+        cell.addClass('hit');
+        this.score(10);
+    }
+
+    miss(cell) {
+        this.game.assets.sounds['miss'].play();
+        let text = ""
+        if (this.currentPlayer.score > 0)
+            text = "-1";
+        this.showText('miss', text, () => {
+            this.isFire = false;
+            this.nextTurn();
+        });
+        cell.addClass('mishit');
+        this.score(-1);
+    }
+
     nextTurn() {
+        this.currentPlayer.board.hidePointer();
+        this.currentPlayer.endTurn();
+
         this.currentPlayerID++;
-        if (this.currentPlayerID >= this.game.players.length) { // następna tura, gracz #0
+        if (this.currentPlayerID >= this.game.players.length) { // następna tura
             this.currentPlayerID = 0;
             this.turn++;
         }
+
         this.preparePlayerScreen();
     }
+
+    //
+    //
+    //
 
     stats() {
         this.game.assets.sounds['click'].play();
@@ -205,7 +214,7 @@ class BattleScreen extends Screen {
     finishBattle(isSurrender) {
         this.isGameover = true;
 
-        this.opponentPlayer.board.hideBoard();
+        this.currentPlayer.battleBoard.hideBoard();
 
         this.showText('gameover', '', () => {
             this.game.goGameover();

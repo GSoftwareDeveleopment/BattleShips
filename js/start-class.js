@@ -40,9 +40,9 @@ class StartScreen extends Screen {
         switch (option) {
             case "battle":
                 let mode = $(e.target).data('mode');
-                console.log('begin new battle in "' + mode + '" mode...;')
-                this.prepare2Battle(mode);
+                console.log('selecting new battle in "' + mode + '" mode...;')
 
+                this.prepare2Battle(mode);
                 break;
             case "menu":
                 let menu = $(e.target).data('menu');

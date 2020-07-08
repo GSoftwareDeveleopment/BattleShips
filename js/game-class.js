@@ -90,11 +90,11 @@ class Game {
 
     goGameover() {
         this.screenBattle.hideScreen();
-        // this.screenStats.showScreen();
+        this.screenStats.showScreen();
     }
 
     goRevange() {
-        // this.screenStats.hideScreen();
+        this.screenStats.hideScreen();
 
         // zresetuj graczy
         for (let playerID in this.players) {

@@ -15,6 +15,7 @@ class Board extends Interface {
         c.prop("id", this.player.id)
             .addClass('board hidden');
 
+        console.log(`- initializing player board`);
         this.width = width;
         this.height = height;
         // this.screen = $(`<div id="board-${this.player.id}"/>`).addClass('board hidden');
@@ -91,11 +92,13 @@ class Board extends Interface {
     // metody ustawiają rodzaj wyświetlanej planszy
     // editBoard to plansza mniejsza, przeznaczona do ustawiania staków, znajduje się po lewej stronie ekranu
     setEditBoard() {
+        console.log('- set board to edit mode');
         this._container.removeClass('battle');
     }
 
     // setGameBoard ustawia na planszę gry: jest ustawiona na środku ekranu i jest większa od planszy do ustawiania starków
     setGameBoard() {
+        console.log('- set board to game mode');
         this._container.addClass('battle')
     }
 

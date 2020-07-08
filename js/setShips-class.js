@@ -51,6 +51,7 @@ class SetShipsScreen extends Screen {
     prepareScreen() {
         // pobranie referencji aktualnego gracza
         let player = this.game.players[this.currentPlayer];
+        console.log(`...preparing setup ship screen for player ${player.id}...`)
 
         // ustawienie nazwy gracza
         this.interface['textbox']['player-name'].val(player.name);
@@ -75,8 +76,6 @@ class SetShipsScreen extends Screen {
 
         player.prepare2SetupShips(this);
     }
-
-    /* obsługa zdarzeń przycisków */
 
     // ekran pomocy
     help() {

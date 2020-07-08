@@ -43,6 +43,8 @@ class Board extends Interface {
         this.onClickRight = null;
 
         // inicjacja interfejsu oraz jego zdarzeń
+        this._pointerX = null;
+        this._pointerY = null;
         this.build('div.cell', 'cells')
             .on('mouseover', (e) => { // kursor nad komórką
                 this.placePointer(e);
@@ -284,16 +286,27 @@ class Board extends Interface {
 
     placePointer(e) {
         e.preventDefault();
-        $(e.currentTarget).addClass('choiced');
+        let cell = $(e.currentTarget);
+        this._pointerX = cell.data('col');
+        this._pointerY = cell.data('row');
+        cell.addClass('choiced');
     }
 
     removePointer(e) {
         e.preventDefault();
-        $(e.currentTarget).removeClass('choiced');
+        if (this._pointerX !== null && this._pointerY !== null) {
+            $(e.currentTarget).removeClass('choiced');
+            this._pointerX = null;
+            this._pointerY = null;
+        }
     }
 
     hidePointer() {
-        this.screen.find('div.cell.choiced').removeClass('choiced');
+        if (this._pointerX !== null && this._pointerY !== null) {
+            $(e.currentTarget).removeClass('choiced');
+            this._pointerX = null;
+            this._pointerY = null;
+        }
     }
 
 }

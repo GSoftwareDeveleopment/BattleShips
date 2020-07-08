@@ -4,9 +4,9 @@ class StatsScreen extends Screen {
 		super(_container, _game);
 
 		this.interface.build('button', 'btn', {
-			'close': (el) => { el.one('click', () => { this.close(); }); },
-			'revange': (el) => { el.one('click', () => { this.game.goRevange(); }); },
-			'menu': (el) => { el.one('click', () => { this.game.goStart(); }); }
+			'close': (el) => { el.on('click', () => { this.close(); }); },
+			'revange': (el) => { el.on('click', () => { this.game.goRevange(); }); },
+			'menu': (el) => { el.on('click', () => { this.game.goStart(); }); }
 		});
 
 		this.interface.build('li.tab', 'tabsbtn').each((id, el) => {

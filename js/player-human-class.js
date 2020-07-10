@@ -1,13 +1,26 @@
 class Human extends Player {
 
     constructor(_game, id) {
-        console.log('creating player: Human...');
+        console.log('Human class: Creating player: Human...');
         super(_game, 1, id);
     }
 
     prepare2SetupShips(_setupShips) {
-        this.setupShips = _setupShips;
+        super.prepare2SetupShips(_setupShips);
 
+        this.dockyardList = new Dockyard(this.dockyard, this.setupShips.container.find('div#dockyard-list'));
+        this.dockyardList.onSelect = (shipType) => {
+            this.game.assets.sounds['pop'].play();
+            this.setupShips.currentShip = new Ship(shipType, 0);
+        };
+        this.dockyardList.onUnselect = (shipType) => {
+            this.game.assets.sounds['cancel'].play();
+            this.setupShips.currentShip = null;
+        };
+        this.dockyardList.onNotAvailable = (shipType) => {
+            this.game.assets.sounds['error'].play();
+            this.setupShips.currentShip = null;
+        };
         // pokazanie planszy gracza
         this.board.setEditBoard();
         this.board.showBoard();
@@ -46,7 +59,7 @@ class Human extends Player {
         this.board.redraw();
     }
 
-    /* zdarzenie dla mapu (prawy przycisk myszy) */
+    /* zdarzenie dla mapy */
 
     rotateShip(e) {
         e.preventDefault();
@@ -67,8 +80,6 @@ class Human extends Player {
         this.placePointer(e);
     }
 
-    /* zdarzenie dla mapy (lewy przycisk myszy) */
-
     setShip(e) {
         e.preventDefault();
 
@@ -83,8 +94,8 @@ class Human extends Player {
             if (ship) {
                 // ------------------------------------------------------------------- POBRANIE STATKU Z PLANSZY GRACZA
                 let currentShip = ship.ship;
-                if (this.setupShips.dockyardList.changeQuantity(currentShip.shipType, 1)) {
-                    this.setupShips.dockyardList.setShip(currentShip.shipType);
+                if (this.dockyardList.changeQuantity(currentShip.shipType, 1)) {
+                    this.dockyardList.setShip(currentShip.shipType);
                     this.board.removeShip(ship.id);
                     this.board.drawShip(currentShip);
 
@@ -100,13 +111,13 @@ class Human extends Player {
             // sprawdź, czy statek może być odłożony
             if (this.board.shipInBoard(currentShip) && !this.board.isOverlaped(currentShip)) {
 
-                if (this.setupShips.dockyardList.changeQuantity(currentShip.shipType, - 1)) {
+                if (this.dockyardList.changeQuantity(currentShip.shipType, - 1)) {
                     this.board.addShip(currentShip);
                     this.game.assets.sounds['splash'].play();
                 } else {
                     this.board.redraw();
                     // odznaczenie wybranego statku na liście
-                    this.setupShips.dockyardList.unselectShip();
+                    this.dockyardList.unselectShip();
                 }
 
             } else {
@@ -122,12 +133,16 @@ class Human extends Player {
     }
 
     setupShipsDone() {
-        this.board.clear();
-        this.board.hideBoard();
+        super.setupShipsDone();
+
         this.board.onCellOver = null;
         this.board.onCellOut = null;
         this.board.onClickLeft = null;
         this.board.onClickRight = null;
+
+        // skasowanie (ukrycie) listy statków (dockyard-list)
+        // TO DO: umieść w Interface metodę Remove()
+        this.dockyardList.remove();
     }
 
     //
@@ -135,22 +150,26 @@ class Human extends Player {
     //
 
     prepare2Battle(_battle) {
-        this.battleBoard.onClickLeft = (e) => {
-            let cell = $(e.currentTarget),
-                x = cell.data('col'),
-                y = cell.data('row');
-            _battle.fire(x, y);
-        };
+        super.prepare2Battle(_battle);
     }
 
-    beginTurn(_battle) {
-        this.battleBoard.showBoard();
+    beginTurn() {
+        super.beginTurn();
+        this.battleBoard.onClickLeft = (e) => { this.fire(e); };
     }
 
-    fire(_battle) {
+    fire(e) {
+        let cell = $(e.currentTarget),
+            x = cell.data('col'),
+            y = cell.data('row');
+        super.fire(x, y);
+        this.battle.fire(x, y);
     }
 
-    endTurn(_battle) {
+    endTurn() {
+        super.endTurn();
+        this.battleBoard.onClickLeft = null;
         this.battleBoard.hideBoard();
     }
+
 }

@@ -8,7 +8,9 @@
             "type": "chrome",
             "request": "launch",
             "runtimeArgs": [
-                "--auto-open-devtools-for-tabs"
+                "--auto-open-devtools-for-tabs",
+                "--disable-extensions",
+                "--incognito"
             ],
             "name": "Open in Chrome",
             "file": "${workspaceFolder}/index.html"

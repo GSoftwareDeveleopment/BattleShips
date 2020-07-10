@@ -104,8 +104,17 @@ class Board extends Interface {
         this._container.addClass('battle')
     }
 
+    //
+    //
+    //
+
+    makeShip(shipType) {
+        return new Ship(shipType, 0);
+    }
+
     // dodaje statek do planszy
     addShip(ship) {
+        console.log(`Board class: Player '${this.player.id}' add ship to board...`);
         let cloneShip = ship.clone();
         this.ships.push(cloneShip);
 
@@ -121,6 +130,7 @@ class Board extends Interface {
     }
 
     removeShip(shipID) {
+        console.log(`Board class: Player '${this.player.id}' remove ship from board...`);
         let ship = this.ships[shipID];
 
         // znajdź typ statku w dockyard

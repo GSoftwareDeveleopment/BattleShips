@@ -13,7 +13,7 @@ class Game {
             backgroundSound: false
         };
 
-        console.groupCollapsed('Initialize game');
+        console.groupCollapsed('Game class: Initialize');
         this.assets = _assets;
         this.assets.sounds["music"].obj.loop = true;
         this.assets.sounds["sea"].obj.loop = true;
@@ -26,23 +26,19 @@ class Game {
         console.groupEnd();
     }
 
-    getResByName(name) {
-        for (let i = 0; i < this.assets.length; i++) {
-            let res = this.assets[i];
-            if (res.id === name) {
-                return $(res).clone();
-            }
-        }
-        return false;
-    }
+    //
+    //
+    //
 
     goStart() {
+        console.log('Game class: Running Start screen');
         this.players = [];
         this.screenStats.hideScreen(); // konieczność, zamknięcie screenStats po Gameover
         this.screenStart.showScreen();
     }
 
     goSetupShips(playmode) {
+        console.log('Game class: Setup ships screen');
         let _game = this;
         if (playmode) {
             this.playmode = playmode;
@@ -52,15 +48,18 @@ class Game {
                 case "cvc": // computer vs computer
                     // addNewPlayer(0, 'computer-1');
                     // addNewPlayer(0, 'computer-2');
-                    console.log('Computer vs Computer mode is not implemented yet :(');
+                    console.log('Game class: Computer vs Computer mode is not implemented yet :(');
                     break;
                 case "hvc": // human vs computer
+                    console.log('Game class: Starting Human vs Computer game...');
+                    this.players.push(new Human(this, 'human'));
+                    this.players.push(new Computer(this, 'computer'));
                     // addNewPlayer(1, 'human');
                     // addNewPlayer(0, 'computer');
-                    console.log('Human vs Computer mode is not implemented yet :(');
+                    // console.log('Human vs Computer mode is not implemented yet :(');
                     break;
                 case "hvh": // human vs human
-                    console.log('Starting Human vs Human game...');
+                    console.log('Game class: Starting Human vs Human game...');
                     this.players.push(new Human(this, 'human-1'));
                     this.players.push(new Human(this, 'human-2'));
                     break;
@@ -73,6 +72,8 @@ class Game {
     }
 
     goAbort() {
+        console.log('Game class: Runing Abort game');
+
         for (let playerID in this.players) {
             this.players[playerID].removePlayer();
         }
@@ -83,17 +84,20 @@ class Game {
     }
 
     goBattle() {
+        console.log('Game class: Runing Battle');
         // przejście do bitwy
         this.screenSetupShips.hideScreen();
         this.screenBattle.showScreen();
     }
 
     goGameover() {
+        console.log('Game class: Runing Gameover');
         this.screenBattle.hideScreen();
         this.screenStats.showScreen();
     }
 
     goRevange() {
+        console.log('Game class: Runing Revange');
         this.screenStats.hideScreen();
 
         // zresetuj graczy

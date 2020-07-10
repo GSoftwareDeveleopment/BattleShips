@@ -7,12 +7,12 @@ The intention of this project is to present the construction of the game using O
 
 ## Basic Assumptions
 
-- [x] 1. Using a JavaScript to write game
-- [x] 2. Use object oriented programming (OOP)
-- [x] 3. Allow two people to play
-- [ ] 4. Give the opportunity to play with the computer
-- [ ] 5. Allow game over the network
-- [ ] 6. Implement AI for computer games
+:heavy_check_mark: 1. Using a JavaScript to write game
+:heavy_check_mark: 2. Use object oriented programming (OOP)
+:heavy_check_mark: 3. Allow two people to play
+:white_check_mark: 4. Give the opportunity to play with the computer
+:white_check_mark: 5. Allow game over the network
+:white_check_mark: 6. Implement AI for computer games
    
 ### NOTE
 https://service.a-bolt.pl/BattleShips/

@@ -7,8 +7,8 @@ The intention of this project is to present the construction of the game using O
 
 ## Basic Assumptions
 
-| done | assumption |
-+ ---- + ---------- +
+| complied           | assumption  |
++ ------------------ + ---------- +
 | :heavy_check_mark: | Using a JavaScript to write game |
 | :heavy_check_mark: | Use object oriented programming (OOP) |
 | :heavy_check_mark: | Allow two people to play |

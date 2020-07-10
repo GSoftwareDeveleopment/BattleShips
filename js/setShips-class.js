@@ -51,28 +51,13 @@ class SetShipsScreen extends Screen {
     prepareScreen() {
         // pobranie referencji aktualnego gracza
         let player = this.game.players[this.currentPlayer];
-        console.log(`...preparing setup ship screen for player ${player.id}...`)
+        console.log(`SetShipsScreen class: ...preparing setup ship screen for player '${player.id}'...`)
 
         // ustawienie nazwy gracza
         this.interface['textbox']['player-name'].val(player.name);
-        // this.screen.find('input#player-name').val(player.name);
 
         this.selectedShip = null;
         this.currentShip = null;
-
-        this.dockyardList = new Dockyard(player.dockyard, this.container.find('div#dockyard-list'));
-        this.dockyardList.onSelect = (shipType) => {
-            this.game.assets.sounds['pop'].play();
-            this.currentShip = new Ship(shipType, 0);
-        };
-        this.dockyardList.onUnselect = (shipType) => {
-            this.game.assets.sounds['cancel'].play();
-            this.currentShip = null;
-        };
-        this.dockyardList.onNotAvailable = (shipType) => {
-            this.game.assets.sounds['error'].play();
-            this.currentShip = null;
-        };
 
         player.prepare2SetupShips(this);
     }
@@ -102,7 +87,7 @@ class SetShipsScreen extends Screen {
 
     // przejście do ustawień następnego gracza
     done() {
-        console.log(`Player '${this.currentPlayer.id}' has finish ships setup.`);
+        console.log(`SetShipsScreen class: Player '${this.currentPlayer.id}' has finish ships setup.`);
         this.game.assets.sounds['click'].play();
 
         let currentPlayer = this.game.players[this.currentPlayer];
@@ -112,17 +97,13 @@ class SetShipsScreen extends Screen {
         // zapamiętanie nazwy gracza
         currentPlayer.name = this.interface['textbox']['player-name'].val();
 
-        // skasowanie (ukrycie) listy statków (dockyard-list)
-        // TO DO: umieść w Interface metodę Remove()
-        this.dockyardList.remove();
-
         // zmiana aktualnego gracza lub przejście do bitwy
         this.currentPlayer++;
         if (this.currentPlayer < this.game.players.length) {
             // tak
             this.interface['btn']['done'].addClass('hidden');
             this.interface['btn']['battle'].removeClass('green hidden').prop('disabled', true).addClass('disabled');
-            console.log(`Change to next player...`);
+            console.log(`SetShipsScreen class: Change to next player...`);
             this.prepareScreen();
         }
     }

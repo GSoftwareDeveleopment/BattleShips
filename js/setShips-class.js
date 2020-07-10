@@ -22,7 +22,6 @@ class SetShipsScreen extends Screen {
             'battle': (el) => {
                 el.on('click', () => {
                     this.done();
-                    this.game.goBattle();
                 });
             }
         });
@@ -101,6 +100,9 @@ class SetShipsScreen extends Screen {
             this.interface['btn']['battle'].removeClass('green hidden').prop('disabled', true).addClass('disabled');
             console.log(`SetShipsScreen class: Change to next player...`);
             this.prepareScreen();
+        } else {
+            // przejście do bitwy
+            this.game.goBattle();
         }
     }
 

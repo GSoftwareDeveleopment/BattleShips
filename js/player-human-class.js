@@ -11,7 +11,7 @@ class Human extends Player {
         this.dockyardList = new Dockyard(this.dockyard, this.setupShips.container.find('div#dockyard-list'));
         this.dockyardList.onSelect = (shipType) => {
             this.game.assets.sounds['pop'].play();
-            this.setupShips.currentShip = new Ship(shipType, 0);
+            this.setupShips.currentShip = this.board.makeShip(shipType);
         };
         this.dockyardList.onUnselect = (shipType) => {
             this.game.assets.sounds['cancel'].play();
@@ -21,7 +21,8 @@ class Human extends Player {
             this.game.assets.sounds['error'].play();
             this.setupShips.currentShip = null;
         };
-        // pokazanie planszy gracza
+
+        // ustawienie i pokazanie planszy gracza
         this.board.setEditBoard();
         this.board.showBoard();
 
@@ -133,8 +134,6 @@ class Human extends Player {
     }
 
     setupShipsDone() {
-        super.setupShipsDone();
-
         this.board.onCellOver = null;
         this.board.onCellOut = null;
         this.board.onClickLeft = null;
@@ -143,6 +142,8 @@ class Human extends Player {
         // skasowanie (ukrycie) listy statków (dockyard-list)
         // TO DO: umieść w Interface metodę Remove()
         this.dockyardList.remove();
+
+        super.setupShipsDone();
     }
 
     //

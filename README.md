@@ -7,12 +7,14 @@ The intention of this project is to present the construction of the game using O
 
 ## Basic Assumptions
 
-:heavy_check_mark: Using a JavaScript to write game
-:heavy_check_mark: Use object oriented programming (OOP)
-:heavy_check_mark: Allow two people to play
-:white_check_mark: Give the opportunity to play with the computer
-:white_check_mark: Allow game over the network
-:white_check_mark: Implement AI for computer games
+| done | assumption |
++ ---- + ---------- +
+| :heavy_check_mark: | Using a JavaScript to write game |
+| :heavy_check_mark: | Use object oriented programming (OOP) |
+| :heavy_check_mark: | Allow two people to play |
+| :white_check_mark: | Give the opportunity to play with the computer |
+| :white_check_mark: | Allow game over the network |
+| :white_check_mark: | Implement AI for computer games |
    
 ### NOTE
 https://service.a-bolt.pl/BattleShips/

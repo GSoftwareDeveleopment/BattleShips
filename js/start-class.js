@@ -40,13 +40,11 @@ class StartScreen extends Screen {
         switch (option) {
             case "battle":
                 let mode = $(e.target).data('mode');
-                console.log('selecting new battle in "' + mode + '" mode...;')
-
                 this.prepare2Battle(mode);
                 break;
             case "menu":
                 let menu = $(e.target).data('menu');
-                console.log('change menu on "' + menu + '"')
+                console.log('StartScreen class: change menu on "' + menu + '"')
 
                 if (this.interface['menus'][menu]) {
                     // zamknij wszystkie menu
@@ -91,24 +89,25 @@ class StartScreen extends Screen {
                         }
                         break;
                     default:
-                        console.warn('Setting: value type is not implemented!')
+                        console.warn('StartScreen class: value type is not implemented!')
                         break;
                 }
                 if (value !== undefined) {
                     this.game.settings[set] = value;
-                    console.log('Settings: value "' + set + '" is set on "' + value + '"');
+                    console.log('StartScreen class: value "' + set + '" is set on "' + value + '"');
                 } else {
-                    console.warn('Setting: value is not recoginzed!');
+                    console.warn('StartScreen class: value is not recoginzed!');
                 }
                 // console.log(set, values, setValue, valueID);
                 break;
             default:
-                console.warn('Option is not implemented or not recognized');
+                console.warn('StartScreen class: Option is not implemented or not recognized');
         }
 
     }
 
     prepare2Battle(mode) {
+        console.log('StartScreen class: selecting new game in "' + mode + '" mode...;')
         this.hideScreen();
 
         this.game.goSetupShips(mode);

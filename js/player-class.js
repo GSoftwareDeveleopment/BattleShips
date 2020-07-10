@@ -45,12 +45,12 @@ class Player {
     //
 
     prepare2SetupShips(_setupShips) {
-        console.log(`Player class: Preparing player '${this.id} to setups shpis...`)
+        console.log(`Player class: Preparing player '${this.id}' to setups shpis...`)
         this.setupShips = _setupShips;
     }
 
     setupShipsDone() {
-        console.log(`Player class: Player '${this.id} are done setup shpis...`)
+        console.log(`Player class: Player '${this.id}' are done setup shpis...`)
         this.board.clear();
         this.board.hideBoard();
     }

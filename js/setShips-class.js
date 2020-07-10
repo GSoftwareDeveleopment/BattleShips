@@ -73,11 +73,7 @@ class SetShipsScreen extends Screen {
         this.game.assets.sounds['click'].play();
 
         let player = this.game.players[this.currentPlayer];
-
-        // ukrycie planszy gracza
-        player.board.removeBoard();
-
-        this.dockyardList.remove();
+        player.setupShipsDone();
 
         // skasowanie (ukrycie) listy statków (dockyard-list)
         // this.dockyardList.empty();

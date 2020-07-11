@@ -87,6 +87,9 @@ class Board extends Interface {
         this._container.addClass('hidden');
     }
 
+    toggleVisibility() {
+        this._container.toggleClass('hidden');
+    }
     //
     //
     //

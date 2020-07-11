@@ -164,13 +164,11 @@ class Human extends Player {
             x = cell.data('col'),
             y = cell.data('row');
         super.fire(x, y);
-        this.battle.fire(x, y);
     }
 
     endTurn() {
         super.endTurn();
         this.battleBoard.onClickLeft = null;
-        this.battleBoard.hideBoard();
     }
 
 }

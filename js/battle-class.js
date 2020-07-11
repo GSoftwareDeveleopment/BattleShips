@@ -108,13 +108,17 @@ class BattleScreen extends Screen {
     beginTurn(player) {
         console.log(`Battle class: Start turn...`);
 
-        this.showText('turn', player.name);
-        this.isFire = false;
+        this.score(0);
+        this.isFire = true;
+        this.showText('turn', player.name, () => {
+            this.isHit = false;
+            this.isSunk = false;
+            this.isFire = false;
+        });
+        player.beginTurn(this);
 
         this.interface['btn']['surrender'].removeClass('hidden');
         this.interface['btn']['stats'].removeClass('hidden');
-
-        player.beginTurn(this);
     }
 
     fire(firex, firey) {
@@ -137,32 +141,44 @@ class BattleScreen extends Screen {
 
         this.game.assets.sounds['cannon'].play();
 
+        this.isHit = false;
+        this.isSunk = false;
+
+        let hitPoint = this.opponentPlayer.board.shipInPos(firex, firey);
+        if (hitPoint) {
+            this.isHit = true;
+            hitPoint.ship.masts[hitPoint.mastID] = false; // ustaw trafiony masz na "zniszczony"
+            if (!hitPoint.ship.exist()) {
+                this.isSunk = true;
+            }
+        }
+
         this.showText('fire', '', () => {
             cell.removeClass('aim');
-            let hit = this.opponentPlayer.board.shipInPos(firex, firey);
 
-            if (hit) { // statek trafiony?
-                hit.ship.masts[hit.mastID] = false; // ustaw trafiony masz na "zniszczony"
-
+            if (this.isHit) { // statek trafiony?
                 this.interface['btn']['surrender'].removeClass('hidden');
                 this.interface['btn']['stats'].removeClass('hidden');
 
-                if (hit.ship.exist()) { // nie zatopiony
-                    this.hit(cell, hit);
+                if (!this.isSunk) { // nie zatopiony
+                    this.hit(cell, hitPoint);
                 } else { // trafiony zatopiony
-                    this.hitAndSunk(cell, hit);
+                    this.hitAndSunk(cell, hitPoint);
                 }
             } else {
                 this.miss(cell);
             }
-        })
+        });
+        return { isHit: this.isHit, isSunk: this.isSunk };
     }
 
     hit(cell) {
         console.log(`Battle class: Player hit ship`);
 
         this.game.assets.sounds['hit1'].play();
-        this.showText('hit', '+5', () => this.isFire = false);
+        this.showText('hit', '+5', () => {
+            this.isFire = false;
+        });
 
         cell.addClass('hit');
 
@@ -200,9 +216,9 @@ class BattleScreen extends Screen {
     }
 
     nextTurn() {
-        console.log(`Battle class: change turn...`);
-        this.currentPlayer.board.hidePointer();
         this.currentPlayer.endTurn();
+
+        console.log(`Battle class: change turn...`);
 
         this.currentPlayerID++;
         if (this.currentPlayerID >= this.game.players.length) { // następna tura

@@ -221,3 +221,22 @@
 #game-set fieldset ul li > div.size > span.set {
     background:orange;
 }
+#game-set div#progressbar {
+    display:block;
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:80%;
+    height:5%;
+    transform: translate(-50%,-50%);
+    background: rgba(0,0,0,.5);
+    border-radius: var(--interfaceRadius);
+    box-shadow:0 0 10px black;
+}
+
+#game-set div#progressbar div.progress {
+    width:0;
+    height:100%;
+    background: rgba(0,255,0,.5);
+    border-radius: var(--interfaceRadius);
+}

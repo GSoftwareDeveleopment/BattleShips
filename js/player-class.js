@@ -73,7 +73,11 @@ class Player {
         if (x !== undefined && y !== undefined) {
             const letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             console.log(`Player class: Player '${this.id}' give a shot on point ${letter.charAt(x)}${y}`);
-            this.battle.fire(x, y);
+            let hit = this.battle.fire(x, y);
+            if (hit.isHit & hit.isSunk) {
+                this.battleBoard.ships.push(hit.ship.clone());
+            }
+            return hit;
         } else {
             console.error(`Player class: Coordinates are not defined! (${x},${y})`);
         }

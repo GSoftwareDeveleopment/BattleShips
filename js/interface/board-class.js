@@ -267,22 +267,21 @@ class Board extends Interface {
         return false;
     }
 
-    // metoda sprawdzająca czy statek (ship) mieści się na planysz
-    shipInBoard(ship) {
-        let self = this;
-        let mastsCount = ship.masts.length;
+    // metoda sprawdza, czy podane koordynaty mieszczą się na planszy
+    coordInBoard(x, y) {
+        return ((x >= 0 && x < this.width && y >= 0 && y < this.height));
+    }
 
-        const _inBound = function (x, y) {
-            return ((x >= 0 && x < self.width &&
-                y >= 0 && y < self.height));
-        }
+    // metoda sprawdzająca czy statek (ship) mieści się na planszy
+    shipInBoard(ship) {
+        let mastsCount = ship.masts.length;
 
         let x1 = ship.x,
             y1 = ship.y,
             x2 = ship._pos(mastsCount - 1).x,
             y2 = ship._pos(mastsCount - 1).y;
 
-        return (_inBound(x1, y1) && _inBound(x2, y2));
+        return (this.coordInBoard(x1, y1) && this.coordInBoard(x2, y2));
     }
 
     // metoda wylicza index na podstawie koordynatów x,y
@@ -313,7 +312,8 @@ class Board extends Interface {
 
     hidePointer() {
         if (this._pointerX !== null && this._pointerY !== null) {
-            $(e.currentTarget).removeClass('choiced');
+            let index = this._index(this._pointerX, this._pointerY);
+            this.boardCells[index].removeClass('choiced');
             this._pointerX = null;
             this._pointerY = null;
         }

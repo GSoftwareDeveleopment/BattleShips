@@ -60,22 +60,29 @@ class Player {
     //
 
     prepare2Battle(_battle) {
-        console.log(`Player class: Preparing player '${this.id} to battle...`)
+        console.log(`Player class: Preparing player '${this.id}' to battle...`)
         this.battle = _battle;
     }
 
     beginTurn() {
-        console.log(`Player class: Player '${this.id} begin turn...`)
+        console.log(`Player class: Player '${this.id}' begin turn...`)
         this.battleBoard.showBoard();
     }
 
     fire(x, y) {
-        const letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        console.log(`Player class: Player '${this.id} give a shot on point ${letter.charAt(x)}${y}`)
+        if (x !== undefined && y !== undefined) {
+            const letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            console.log(`Player class: Player '${this.id}' give a shot on point ${letter.charAt(x)}${y}`);
+            this.battle.fire(x, y);
+        } else {
+            console.error(`Player class: Coordinates are not defined! (${x},${y})`);
+        }
     }
 
     endTurn() {
-        console.log(`Player class: Player '${this.id} end turn...`)
+        console.log(`Player class: Player '${this.id}' end turn...`);
+        console.log();
+        this.battleBoard.hidePointer();
         this.battleBoard.hideBoard();
     }
 

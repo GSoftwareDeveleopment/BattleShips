@@ -20,7 +20,7 @@ class Ship {
         this.x = 0;            // położenie x,y
         this.y = 0;            //
         this.shipType = shipType;    // ilość masztów
-        this.dir = dir;        // układ statku (=1 poziomo; =2 pionowo)
+        this.dir = dir;        // układ statku
 
         // ...inicjujemny maszty statku :)
         this.masts = [];           // tablica istnienia masztów statku

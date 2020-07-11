@@ -55,3 +55,19 @@
     bottom:2%;
     right:2%;
 }
+
+/* style tylko dla trybu debbugingu komputera */
+#battle.screen button#aim {
+    top:2%;
+    left:2%;
+}
+
+#battle.screen button#fire {
+    top:2%;
+    left:13.5%;
+}
+
+#battle.screen button#chance-map {
+    top:2%;
+    left:25%;
+}

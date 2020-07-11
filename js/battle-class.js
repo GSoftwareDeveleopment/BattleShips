@@ -78,8 +78,8 @@ class BattleScreen extends Screen {
 
         this.assignPlayerSide();
 
-        this.currentPlayer.prepare2Battle(this);
-        this.opponentPlayer.prepare2Battle(this);
+        this.currentPlayer.prepare2Battle(this, this.opponentPlayer);
+        this.opponentPlayer.prepare2Battle(this, this.currentPlayer);
 
         this.score(0);
         console.groupEnd();
@@ -169,7 +169,7 @@ class BattleScreen extends Screen {
                 this.miss(cell);
             }
         });
-        return { isHit: this.isHit, isSunk: this.isSunk };
+        return { ship: hitPoint.ship, isHit: this.isHit, isSunk: this.isSunk };
     }
 
     hit(cell) {

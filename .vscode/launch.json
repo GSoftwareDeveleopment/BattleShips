@@ -5,12 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}/index.html"
+        },
+        {
             "type": "chrome",
             "request": "launch",
             "runtimeArgs": [
                 "--auto-open-devtools-for-tabs",
                 "--disable-extensions",
-                "--incognito"
+                "--remote-debugging-port=9222"
             ],
             "name": "Open in Chrome",
             "file": "${workspaceFolder}/index.html"

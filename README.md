@@ -17,9 +17,9 @@ The intention of this project is to present the construction of the game using O
     - :heavy_check_mark: tracking computer actions
 - :white_check_mark: Allow game over the network
 - :white_check_mark: Implement AI for computer games
-   
+
 ### NOTE
-https://service.a-bolt.pl/BattleShips/
+https://battle-ships.netlify.app/
 Here is a working version of the game where you can play with another person.
 
 # Changelog

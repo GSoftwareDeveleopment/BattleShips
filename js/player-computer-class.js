@@ -5,7 +5,7 @@ class Computer extends Player {
     }
 
     _rand(min, max) {
-        return (Math.floor(Math.random() * (max - min + 1) + min));
+        return (Math.floor(Math.random() * (max - min) + min));
     }
 
     //
@@ -99,9 +99,12 @@ class Computer extends Player {
     prepare2Battle(_battle, opponentPlayer) {
         super.prepare2Battle(_battle);
         this.isHunter = true;
+
         this.aimsCoord = [];
         this.lastAimCoordLen = 0;
+
         this.hitsCoord = [];
+        this.currentHitCoord = null;
 
         // przygotowanie list możliwych strzałów
         this.mapCoord = [];
@@ -122,13 +125,13 @@ class Computer extends Player {
                 this.chanceMap.ships.push(newShip);
             }
         }
+
     }
 
     beginTurn() {
         super.beginTurn();
         console.log('Computer class: prepare to fire...');
 
-        this._makeMapOfChance();
         /* tylko w trybie debbugingu komputera */
         this.chanceMap.hideBoard();
         this.battle.interface['btn']['aim']
@@ -146,6 +149,7 @@ class Computer extends Player {
         this.battle.interface['btn']['chance-map']
             .removeClass('hidden')
             .on('click', () => {
+                this._makeMapOfChance();
                 this.chanceMap.toggleVisibility();
             });
     }
@@ -154,20 +158,22 @@ class Computer extends Player {
         let map = new Array(this.chanceMap.height * this.chanceMap.width);
 
         // ustaw mapę na 0%
-        for (let i = 0; i < map.length; i++) {
-            map[i] = 0;
+        for (let cellID = 0; cellID < map.length; cellID++) {
+            map[cellID] = 0;
+            let cell = this.chanceMap.boardCells[cellID];
+            cell.css('background-color', 'black');
         }
 
-        // oznacz miejsca możliwych ruchów na 50%
+        // oznacz miejsca możliwych ruchów
         for (let coord of this.mapCoord) {
             let x = coord.x, y = coord.y, id = x + y * this.chanceMap.width;
-            map[id] = 50;
+            map[id] = 1;
         }
 
         // oznacz wszystkie zatopione statki na 0%
         for (let ship of this.battleBoard.ships) {
 
-            let nx, ny, id, cell;
+            let nx, ny, id;
 
             for (let i = 0; i < ship.masts.length; i++) {
                 ({ x: nx, y: ny } = ship._pos(i));
@@ -178,12 +184,40 @@ class Computer extends Player {
         }
 
         //
+        for (let coord of this.aimsCoord) {
+            let cellID = this.chanceMap._index(coord.x, coord.y);
+            let cell = this.chanceMap.boardCells[cellID];
+            cell.css('background-color', 'yellow');
+            if (coord.isAimed)
+                map[cellID] += 10;
+        }
+
+        //
+        for (let coord of this.hitsCoord) {
+            let cellID = this.chanceMap._index(coord.x, coord.y);
+            let cell = this.chanceMap.boardCells[cellID];
+            cell.css('background-color', 'green');
+            map[cellID] += 5;
+            if (coord.isFire) {
+                if (coord.isHit)
+                    map[cellID] += 5;
+                else
+                    map[cellID] = 0;
+            }
+        }
+
+        // normalizuj
+        let max = 0;
+        for (let i = 0; i < map.length; i++)
+            if (map[i] > max) max = map[i];
+
         for (let y = 0; y < this.chanceMap.height; y++) {
             for (let x = 0; x < this.chanceMap.width; x++) {
                 let cellID = this.chanceMap._index(x, y);
                 let cell = this.chanceMap.boardCells[cellID];
-                let v = 1 - (map[cellID] / 100);
-                cell.css('background-color', 'rgba(0,0,0,' + v + ')');
+                let v = 1 - (map[cellID] / max);
+                cell.css('background-color', 'black');
+                cell.css('opacity', v);
 
                 // for (let ship of this.board.)
             }
@@ -203,7 +237,7 @@ class Computer extends Player {
                 // jeżeli tak, to...
 
                 // ...sprawdź, czy cel namierzania jest możliwy do wybrania (nie był wcześniej wybierany/trafiony)
-                let targetID = _findIndexByCoord(targetX, targetY);
+                let targetID = this._findIndexByCoord(targetX, targetY);
 
                 // jeżeli, cel możliwy do namierzania
                 if (targetID !== false) {
@@ -264,36 +298,47 @@ class Computer extends Player {
                 // tak?
                 // znajdź i pobierz ostatni namierzony koordynat
                 let aimCoord;
-                for (let j = this.aimsCoord.length - 1; i >= 0; i++) {
+                for (let j = this.aimsCoord.length - 1; j >= 0; j++) {
                     aimCoord = this.aimsCoord[j];
                     if (!aimCoord.isAimed) {
                         break;
                     }
                 }
                 // i utwórz cele namierzania w/g wytycznych listy offsetów
-                this._makerTargets(aimCoord,
+                this._makeTargets(aimCoord,
                     [{ x: -1, y: 0 },   // lewo // lista offsetów do namierzania względem koordynatu trafienia 
                     { x: 0, y: -1 },    // góra // (tylko dla trybu gry, gdzie statki mogą być układane poziomo lub pionowo)
                     { x: +1, y: 0 },    // prawo
                     { x: 0, y: +1 }]);  // dół
-            } else {
-                if (this.hitsCoord.length > 0) {
-
-                } else {
-                    console.log('... not enought hits targets. Mode switch...')
-                    // przejdź do trybu polowania (hunter mode)
-                    this.isHunter = true;
-
-                    // this.prepare2Fire();
-                    return
-                }
             }
+            if (this.hitsCoord.length > 0) {
+                // wybierz cel z listy namierzania
+                let hitID = this._rand(0, this.hitsCoord.length);
+                console.log(this.hitsCoord.length, hitID);
+                this.currentHitCoord = this.hitsCoord[hitID];
+                fireX = this.currentHitCoord.x;
+                fireY = this.currentHitCoord.y;
+
+            } else {
+                this.currentHitCoord = null;
+                console.log('... not enought hits targets. Mode switch...')
+                // przejdź do trybu polowania (hunter mode)
+                this.isHunter = true;
+
+                // this.prepare2Fire();
+                return
+            }
+
         }
 
+        // this._makeMapOfChance();
+
         /* tylko w trybie debbugingu komputer */
-        let cellID = this.battleBoard._index(fireX, fireY);
-        let cell = this.battleBoard.boardCells[cellID];
-        cell.addClass('aim');
+        if (fireX !== undefined && fireY !== undefined) {
+            let cellID = this.battleBoard._index(fireX, fireY);
+            let cell = this.battleBoard.boardCells[cellID];
+            cell.addClass('aim');
+        }
         this.aimX = fireX;
         this.aimY = fireY;
 
@@ -314,25 +359,31 @@ class Computer extends Player {
                 }, 1000);
             }
             return
-        } else {
-            if (this.waiting) clearInterval(this.waiting);
-            this.waiting = null;
+        }
+        if (this.waiting) clearInterval(this.waiting);
+        this.waiting = null;
 
-            // usuń koordynat z listy możliwych strzałów
-            let coordID = this._findIndexByCoord(fireX, fireY);
-            this.mapCoord.splice(coordID, 1);
+        // usuń koordynat z listy możliwych strzałów
+        let coordID = this._findIndexByCoord(fireX, fireY);
+        this.mapCoord.splice(coordID, 1);
 
-            let hit = super.fire(fireX, fireY);
+        let hit = super.fire(fireX, fireY);
 
+        if (!this.isHunter) { // tryb "TARGET"
+            if (this.currentHitCoord) {
+                this.currentHitCoord.isFire = true;
+            }
+            if (this.currentHitCoord) {
+                this.currentHitCoord.isHit = true;
+            }
+
+        } else { // tryb "HUNTER"
             // czy było trafienie?
             if (hit.isHit) {
                 // tak?
                 // czy było zatopienie?
                 if (!hit.isSunk) {
                     // nie?
-                    // ustaw tryb namierzania (target mode)
-                    this.isHunter = false;
-
                     // dodaj koordynat do listy trafień
                     this.aimsCoord.push({ x: fireX, y: fireY, isAimed: false });
                 } else {
@@ -341,9 +392,8 @@ class Computer extends Player {
                 }
 
                 // przygotuj następny strzał
-                this.prepare2Fire();
+                // this.prepare2Fire();
             }
-
         }
     }
 
